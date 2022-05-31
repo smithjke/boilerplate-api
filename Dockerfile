@@ -14,4 +14,4 @@ COPY --chown=node:node ./yarn.lock .
 RUN yarn
 RUN yarn build
 
-CMD [ "node", "." ]
+CMD [ "yarn", "start" ]
