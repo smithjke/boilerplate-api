@@ -1,0 +1,8 @@
+# FOLDERS
+.idea
+dist
+node_modules
+
+# FILES
+.DS_Store
+.env
