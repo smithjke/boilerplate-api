@@ -41,6 +41,8 @@ async function callMethod(methods: Record<string, JsonRpcMethod>, jsonRpcRequest
       });
     }
 
+    console.error('json-rpc error >>>', e);
+
     return makeErrorJsonRpcResponse(id, {
       code: -32603,
       message: 'Internal error',
@@ -57,7 +59,7 @@ export function createJsonRpcMiddleware(methods: Record<string, JsonRpcMethod>) 
         Promise.all(req.body.map((body) => callMethod(methods, body)))
           .then((responses) => res.json(responses.filter(Boolean)))
           .catch((error) => res.json(makeErrorJsonRpcResponse(null, {
-            code: 1488,
+            code: error.code,
             message: error.message,
           })));
       } else {
@@ -70,7 +72,7 @@ export function createJsonRpcMiddleware(methods: Record<string, JsonRpcMethod>) 
       callMethod(methods, req.body)
         .then((response) => res.json(response || void 0))
         .catch((error) => res.json(makeErrorJsonRpcResponse(null, {
-          code: 4242,
+          code: error.code,
           message: error.message,
         })));
     }
