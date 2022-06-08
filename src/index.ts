@@ -1,12 +1,22 @@
 import dotenv from 'dotenv';
 import express from 'express';
 import { registerDependency } from '~/1st-di';
-import { jsonRpcMiddleware, restMiddleware, UserService } from '~/app';
 import { MongoService, useMongoService } from '~/1st-mongo';
+import {
+  AuthService,
+  jsonRpcMiddleware,
+  PermissionService,
+  restMiddleware,
+  SessionService,
+  UserService,
+} from '~/app';
 
 dotenv.config();
 
 registerDependency('MONGO_SERVICE', () => new MongoService());
+registerDependency('AUTH_SERVICE', () => new AuthService());
+registerDependency('PERMISSION_SERVICE', () => new PermissionService());
+registerDependency('SESSION_SERVICE', () => new SessionService());
 registerDependency('USER_SERVICE', () => new UserService());
 
 const { PORT } = process.env;

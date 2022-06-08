@@ -1,35 +1,19 @@
+import { MongoCrudService } from '~/1st-crud-server';
 import { User } from '~/api';
 import { UserModel } from '../models';
 
-export class UserService {
-  async create(partialUser: Partial<User>): Promise<User> {
-    const user = new UserModel({
-      ...partialUser,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    });
-    await user.save();
-    return user;
+export class UserService extends MongoCrudService<User> {
+  protected model = UserModel;
+
+  async getByName(name: string): Promise<User> {
+    return this.model
+      .findOne()
+      .where('name', name);
   }
 
-  async get(query: { id: string; }): Promise<User> {
-    const user = await UserModel.findOne({ _id: query.id });
-    user['id'] = String(user['_id']);
-    return user;
-  }
+  isActive(user: User): boolean {
+    // @todo check ban
 
-  async list(query: { limit: number; skip: number; }): Promise<{ list: Array<User>; total: number; }> {
-    const total = await UserModel.count();
-    const list = await UserModel
-      .find()
-      .skip(query.skip)
-      .limit(query.limit);
-    return {
-      list: list.map((user) => {
-        user['id'] = String(user['_id']);
-        return user;
-      }),
-      total,
-    };
+    return Boolean(user);
   }
 }
