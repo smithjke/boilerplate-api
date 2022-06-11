@@ -1,3 +1,4 @@
+import { makeQueryString } from '~/1st-core';
 import { RestClient } from '~/1st-rest';
 import {
   mapUserCreateParams,
@@ -13,7 +14,6 @@ import {
   UserListParams,
   UserListResult,
 } from '~/api';
-import { makeQueryString } from '~/1st-utils';
 
 export class UserRestClient extends RestClient {
   async create(params: UserCreateParams): Promise<UserCreateResult> {

@@ -1,4 +1,4 @@
-import { randomString } from '~/1st-utils';
+import { randomString } from '~/1st-core';
 import { User } from '~/api';
 import { Permission } from '../common';
 import { Session } from '../models';

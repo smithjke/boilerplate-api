@@ -7,7 +7,7 @@ export abstract class MongoCrudService<MODEL_TYPE> {
 
   protected updatedAtField: string = 'updatedAt';
 
-  async create(partialSession: Partial<MODEL_TYPE>): Promise<MODEL_TYPE> {
+  async create(partialFields: Partial<MODEL_TYPE>): Promise<MODEL_TYPE> {
     const overFields = {};
     if (this.createdAtField) {
       overFields[this.createdAtField] = new Date();
@@ -16,7 +16,7 @@ export abstract class MongoCrudService<MODEL_TYPE> {
       overFields[this.updatedAtField] = new Date();
     }
     const model = new this.model({
-      ...partialSession,
+      ...partialFields,
       ...overFields,
     });
     await model.save();
