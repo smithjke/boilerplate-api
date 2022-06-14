@@ -1,5 +1,10 @@
 import { CrudRestClient } from '~/1st-crud';
-import { mapSession, mapSessionRaw, Session, SessionRaw } from '../schema';
+import {
+  mapSession,
+  mapSessionRaw,
+  Session,
+  SessionRaw,
+} from '../schema';
 import { ApiParams } from '~/1st-api';
 
 export class SessionRestClient extends CrudRestClient<Session, SessionRaw> {
