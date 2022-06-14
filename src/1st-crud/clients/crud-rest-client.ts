@@ -1,8 +1,14 @@
-import { RestClient } from '~/1st-rest';
-import { ApiListParams, ApiListResult, ApiParams, createMapApiListResult } from '~/1st-api';
 import { makeQueryString } from '~/1st-core';
+import {
+  ApiListParams,
+  ApiListResult,
+  ApiParams,
+  createMapApiListResult,
+} from '~/1st-api';
+import { RestClient } from '~/1st-rest';
+import { CrudClient } from './crud-client';
 
-export abstract class CrudRestClient<MODEL_TYPE, MODEL_TYPE_RAW> extends RestClient {
+export abstract class CrudRestClient<MODEL_TYPE, MODEL_TYPE_RAW> extends RestClient implements CrudClient<MODEL_TYPE> {
   protected abstract mapModel: (model: Partial<MODEL_TYPE>) => Partial<MODEL_TYPE_RAW>;
 
   protected abstract mapModelRaw: (modelRaw: Partial<MODEL_TYPE_RAW>) => Partial<MODEL_TYPE>;

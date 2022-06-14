@@ -1,7 +1,8 @@
 import mongoose from 'mongoose';
-import { CrudService, CrudServiceListQuery, CrudServiceListResult } from '~/1st-crud';
+import { ApiListParams, ApiListResult } from '~/1st-api';
+import { CrudService } from '~/1st-crud';
 
-export abstract class MongoCrudService<MODEL_TYPE> extends CrudService<MODEL_TYPE> {
+export abstract class MongoCrudService<MODEL_TYPE> implements CrudService<MODEL_TYPE> {
   protected model: mongoose.Model<MODEL_TYPE>;
 
   protected createdAtField: string = 'createdAt';
@@ -42,7 +43,7 @@ export abstract class MongoCrudService<MODEL_TYPE> extends CrudService<MODEL_TYP
       .where('_id', id);
   }
 
-  async list(query: CrudServiceListQuery): Promise<CrudServiceListResult<MODEL_TYPE>> {
+  async list(query: ApiListParams['query']): Promise<ApiListResult<Partial<MODEL_TYPE>>> {
     const total = await this.model.count();
     const list = await this.model
       .find()

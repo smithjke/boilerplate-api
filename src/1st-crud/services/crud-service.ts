@@ -1,21 +1,13 @@
-export type CrudServiceListQuery = {
-  limit?: number;
-  skip?: number;
-};
+import { ApiListParams, ApiListResult } from '~/1st-api';
 
-export type CrudServiceListResult<MODEL_TYPE> = {
-  list: Array<MODEL_TYPE>;
-  total: number;
-};
+export interface CrudService<MODEL_TYPE> {
+  create(partialData: Partial<MODEL_TYPE>): Promise<Partial<MODEL_TYPE>>;
 
-export abstract class CrudService<MODEL_TYPE> {
-  abstract create(partialData: Partial<MODEL_TYPE>): Promise<MODEL_TYPE>;
+  update(partialData: Partial<MODEL_TYPE>, id: string): Promise<Partial<MODEL_TYPE>>;
 
-  abstract update(partialData: Partial<MODEL_TYPE>, id: string): Promise<MODEL_TYPE>;
+  delete(id: string): Promise<void>;
 
-  abstract get(id: string): Promise<MODEL_TYPE>;
+  get(id: string): Promise<Partial<MODEL_TYPE>>;
 
-  abstract list(query: CrudServiceListQuery): Promise<CrudServiceListResult<MODEL_TYPE>>;
-
-  abstract delete(id: string): Promise<void>;
+  list(query: ApiListParams['query']): Promise<ApiListResult<Partial<MODEL_TYPE>>>;
 }

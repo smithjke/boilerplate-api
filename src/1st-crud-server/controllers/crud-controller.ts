@@ -22,9 +22,10 @@ export abstract class CrudController<MODEL_TYPE, MODEL_TYPE_RAW> extends BaseCon
     return this.mapModel(result);
   }
 
-  async list(params: ApiListParams): Promise<ApiListResult<Partial<MODEL_TYPE_RAW>>> {
-    const result = await this.crudService.list(params.query);
-    return createMapApiListResult(this.mapModel)(result);
+  async delete(params: ApiParams): Promise<void> {
+    const { id } = params.query;
+    await this.crudService.delete(id);
+    return void 0;
   }
 
   async get(params: ApiParams): Promise<Partial<MODEL_TYPE_RAW>> {
@@ -33,9 +34,8 @@ export abstract class CrudController<MODEL_TYPE, MODEL_TYPE_RAW> extends BaseCon
     return this.mapModel(result);
   }
 
-  async delete(params: ApiParams): Promise<void> {
-    const { id } = params.query;
-    await this.crudService.delete(id);
-    return void 0;
+  async list(params: ApiListParams): Promise<ApiListResult<Partial<MODEL_TYPE_RAW>>> {
+    const result = await this.crudService.list(params.query);
+    return createMapApiListResult(this.mapModel)(result);
   }
 }
