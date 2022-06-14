@@ -1,4 +1,4 @@
-import { UserRestClient } from '~/api/clients';
+import { UserRestClient } from '~/api';
 
 export class AppUserRestClient extends UserRestClient {
   protected url = 'http://localhost:3000/api';

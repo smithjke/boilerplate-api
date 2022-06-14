@@ -17,7 +17,7 @@ export function mapAuthLoginData(data: Partial<AuthLoginData>): Partial<AuthLogi
   };
 }
 
-export function mapAuthLoginDataRaw(dataRaw: Partial<AuthLoginDataRaw>): AuthLoginData {
+export function mapAuthLoginDataRaw(dataRaw: Partial<AuthLoginDataRaw>): Partial<AuthLoginData> {
   return {
     login: mapOrNull(dataRaw.login, String),
     password: mapOrNull(dataRaw.password, String),

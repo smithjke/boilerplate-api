@@ -1,4 +1,4 @@
-import { BaseClient } from '~/1st-api';
+import { BaseClient } from '../common';
 
 export function createApi<T extends Record<string, BaseClient>>(clients: T): T {
   const proxyClients: any = {};

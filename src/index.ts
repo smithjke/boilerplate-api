@@ -7,12 +7,14 @@ import {
   jsonRpcMiddleware,
   PermissionService,
   restMiddleware,
+  SessionController,
   SessionService,
   UserService,
 } from '~/app';
 
 dotenv.config();
 
+registerDependency('SESSION_CONTROLLER', () => new SessionController());
 registerDependency('MONGO_SERVICE', () => new MongoService());
 registerDependency('AUTH_SERVICE', () => new AuthService());
 registerDependency('PERMISSION_SERVICE', () => new PermissionService());
@@ -24,8 +26,8 @@ const { PORT } = process.env;
 const app = express();
 
 app.use(express.json({ type: '*/*' }));
-app.use('/json-rpc', jsonRpcMiddleware);
-app.use('/api', restMiddleware);
+app.use('/json-rpc', jsonRpcMiddleware());
+app.use('/api', restMiddleware());
 app.get('/', (req, res) => {
   res.send('Hello!');
 });

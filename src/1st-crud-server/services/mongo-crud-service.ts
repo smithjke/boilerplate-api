@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
+import { CrudService, CrudServiceListQuery, CrudServiceListResult } from '~/1st-crud';
 
-export abstract class MongoCrudService<MODEL_TYPE> {
+export abstract class MongoCrudService<MODEL_TYPE> extends CrudService<MODEL_TYPE> {
   protected model: mongoose.Model<MODEL_TYPE>;
 
   protected createdAtField: string = 'createdAt';
@@ -23,21 +24,39 @@ export abstract class MongoCrudService<MODEL_TYPE> {
     return model;
   }
 
+  async update(partialData: Partial<MODEL_TYPE>, id: string): Promise<MODEL_TYPE> {
+    const overFields = {};
+    if (this.updatedAtField) {
+      overFields[this.updatedAtField] = new Date();
+    }
+    await this.model.updateOne({ '_id': id }, {
+      ...partialData,
+      ...overFields,
+    });
+    return this.get(id);
+  }
+
   async get(id: string): Promise<MODEL_TYPE> {
     return this.model
       .findOne()
       .where('_id', id);
   }
 
-  async list(query: { limit: number; skip: number; }): Promise<{ list: Array<MODEL_TYPE>; total: number; }> {
+  async list(query: CrudServiceListQuery): Promise<CrudServiceListResult<MODEL_TYPE>> {
     const total = await this.model.count();
     const list = await this.model
       .find()
-      .skip(query.skip)
-      .limit(query.limit);
+      .skip(query.skip ?? 0)
+      .limit(query.limit ?? 10);
     return {
       list,
       total,
     };
+  }
+
+  async delete(id: string): Promise<void> {
+    await this.model
+      .deleteOne()
+      .where('_id', id);
   }
 }

@@ -2,8 +2,8 @@ import { BaseClient, HttpMethod } from '~/1st-api';
 
 export type RestResponseType = 'text' | 'json';
 
-export class RestClient extends BaseClient {
-  protected url: string;
+export abstract class RestClient extends BaseClient {
+  protected abstract url: string;
 
   protected transformHeaders(headers: HeadersInit): HeadersInit {
     return headers;

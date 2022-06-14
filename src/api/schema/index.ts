@@ -1,6 +1,7 @@
 export * from './auth-login-data';
 export * from './auth-login-params';
 export * from './auth-login-result';
+export * from './session';
 export * from './user';
 export * from './user-create-params';
 export * from './user-create-result';

@@ -24,7 +24,7 @@ export function mapUser(data: Partial<User>): Partial<UserRaw> {
   };
 }
 
-export function mapUserRaw(dataRaw: Partial<UserRaw>): User {
+export function mapUserRaw(dataRaw: Partial<UserRaw>): Partial<User> {
   return {
     id: dataRaw.id ? String(dataRaw.id) : null,
     name: dataRaw.name ? String(dataRaw.name) : null,
