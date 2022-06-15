@@ -3,7 +3,7 @@ import {
   mapUserRaw,
   User,
   UserRaw,
-} from '~/api';
+} from '../schema';
 import { CrudRestClient } from '~/1st-crud';
 
 export class UserRestClient extends CrudRestClient<User, UserRaw> {
