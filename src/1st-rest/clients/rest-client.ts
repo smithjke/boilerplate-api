@@ -9,7 +9,48 @@ export abstract class RestClient extends BaseClient {
     return headers;
   }
 
-  // protected async fetch<T>(method: HttpMethod, urn: string, body: object, type?: RestResponseType): Promise<T> {
+  protected async fetchJson<T>(props: {
+    method: HttpMethod;
+    endpoint: string;
+    body?: any;
+    mapResult?: (result: any) => T;
+  }): Promise<T> {
+    const uri = `${this.url}${props.endpoint}`;
+
+    const response = await fetch(uri, {
+      method: props.method,
+      headers: this.transformHeaders({ 'Content-Type': 'application/json' }),
+      body: props.body ? JSON.stringify(props.body) : void 0,
+    });
+
+    if ([200, 201, 202, 304].includes(response.status)) {
+      const json = await response.json();
+      return props.mapResult ? props.mapResult(json) : json;
+    }
+
+    throw new Error(response.statusText);
+  }
+
+  protected async fetchText(props: {
+    method: HttpMethod;
+    endpoint: string;
+    body?: any;
+  }): Promise<string> {
+    const uri = `${this.url}${props.endpoint}`;
+
+    const response = await fetch(uri, {
+      method: props.method,
+      headers: this.transformHeaders({}),
+      body: props.body ? JSON.stringify(props.body) : void 0,
+    });
+
+    if ([200, 201, 202, 304].includes(response.status)) {
+      return response.text();
+    }
+
+    throw new Error(response.statusText);
+  }
+
   protected async fetch<T>(props: {
     method: HttpMethod;
     endpoint: string;
@@ -27,18 +68,17 @@ export abstract class RestClient extends BaseClient {
 
     const responseType = props.type || 'json';
 
-    // @todo refactor
-    switch (responseType) {
-      case 'json':
-        const json = await response.json();
-        return props.mapResult ? props.mapResult(json): json;
-      case 'text':
-        const text = await response.text();
-        return props.mapResult ? props.mapResult(text): (text as unknown as T);
+    if (responseType === 'json') {
+      const json = await response.json();
+      return props.mapResult ? props.mapResult(json) : json;
     }
+
+    const text = await response.text();
+    return props.mapResult ? props.mapResult(text) : (text as unknown as T);
   }
 
   protected async call(address: string, params: object): Promise<object> {
+    console.log('RestClient call >>>', address, params);
     return { a: 1 };
   }
 }
