@@ -11,8 +11,8 @@ export class SessionController extends CrudController<Session, SessionRaw> {
 
   protected mapModelRaw = mapSessionRaw;
 
-  async getByToken(params: ApiParams): Promise<Partial<SessionRaw>> {
-    const { token } = params.query;
+  async getByToken(paramsRaw: ApiParams<void, { token: string; }>): Promise<Partial<SessionRaw>> {
+    const { token } = paramsRaw.query;
     const result = await this.crudService.getByToken(token);
     return this.mapModel(result);
   }

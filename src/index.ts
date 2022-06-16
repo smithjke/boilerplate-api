@@ -7,16 +7,11 @@ import {
   jsonRpcMiddleware,
   PermissionService,
   restMiddleware,
-  SessionController,
   SessionService,
-  UserController,
   UserService,
 } from '~/app';
 
 dotenv.config();
-
-registerDependency('SESSION_CONTROLLER', () => new SessionController());
-registerDependency('USER_CONTROLLER', () => new UserController());
 
 registerDependency('MONGO_SERVICE', () => new MongoService());
 registerDependency('AUTH_SERVICE', () => new AuthService());

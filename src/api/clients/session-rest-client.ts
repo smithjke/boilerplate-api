@@ -14,7 +14,7 @@ export class SessionRestClient extends CrudRestClient<Session, SessionRaw> {
 
   protected mapModelRaw = mapSessionRaw;
 
-  getByToken(params: ApiParams): Promise<Partial<Session>> {
+  getByToken(params: ApiParams<void, { token: string; }>): Promise<Partial<Session>> {
     const { token } = params.query;
     return this.fetch({
       method: 'get',

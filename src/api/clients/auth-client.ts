@@ -1,18 +1,18 @@
+import { ApiParams, createMapApiParams } from '~/1st-api';
 import { RestClient } from '~/1st-rest';
 import {
-  AuthLoginParams,
-  AuthLoginResult,
-  mapAuthLoginParams,
+  AuthLoginData,
+  mapAuthLoginData,
 } from '../schema';
 
 export class AuthClient extends RestClient {
   protected url = '/api';
 
-  login(params: AuthLoginParams): Promise<AuthLoginResult> {
+  login(params: ApiParams<Partial<AuthLoginData>>): Promise<string> {
     return this.fetchText({
       method: 'post',
       endpoint: '/auth/login',
-      body: mapAuthLoginParams(params).data,
+      body: createMapApiParams(mapAuthLoginData)(params).data,
     });
   }
 }

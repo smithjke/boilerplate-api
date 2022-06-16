@@ -22,7 +22,7 @@ export abstract class CrudRestClient<MODEL_TYPE, MODEL_TYPE_RAW> extends RestCli
     });
   }
 
-  update(params: ApiParams<Partial<MODEL_TYPE>>): Promise<Partial<MODEL_TYPE>> {
+  update(params: ApiParams<Partial<MODEL_TYPE>, { id: string; }>): Promise<Partial<MODEL_TYPE>> {
     const { id } = params.query;
     return this.fetch({
       method: 'put',
@@ -41,7 +41,7 @@ export abstract class CrudRestClient<MODEL_TYPE, MODEL_TYPE_RAW> extends RestCli
     });
   }
 
-  get(params: ApiParams): Promise<Partial<MODEL_TYPE>> {
+  get(params: ApiParams<void, { id: string; }>): Promise<Partial<MODEL_TYPE>> {
     const { id } = params.query;
     return this.fetch({
       method: 'get',
@@ -50,7 +50,7 @@ export abstract class CrudRestClient<MODEL_TYPE, MODEL_TYPE_RAW> extends RestCli
     });
   }
 
-  delete(params: ApiParams): Promise<void> {
+  delete(params: ApiParams<void, { id: string; }>): Promise<void> {
     const { id } = params.query;
     return this.fetch({
       method: 'delete',

@@ -15,20 +15,20 @@ export abstract class CrudController<MODEL_TYPE, MODEL_TYPE_RAW> extends BaseCon
     return this.mapModel(result);
   }
 
-  async update(params: ApiParams<Partial<MODEL_TYPE_RAW>>): Promise<Partial<MODEL_TYPE_RAW>> {
+  async update(params: ApiParams<Partial<MODEL_TYPE_RAW>, { id: string; }>): Promise<Partial<MODEL_TYPE_RAW>> {
     const { id } = params.query;
     const data = this.mapModelRaw(params.data);
     const result = await this.crudService.update(data, id);
     return this.mapModel(result);
   }
 
-  async delete(params: ApiParams): Promise<void> {
+  async delete(params: ApiParams<void, { id: string; }>): Promise<void> {
     const { id } = params.query;
     await this.crudService.delete(id);
     return void 0;
   }
 
-  async get(params: ApiParams): Promise<Partial<MODEL_TYPE_RAW>> {
+  async get(params: ApiParams<void, { id: string; }>): Promise<Partial<MODEL_TYPE_RAW>> {
     const { id } = params.query;
     const result = await this.crudService.get(id);
     return this.mapModel(result);

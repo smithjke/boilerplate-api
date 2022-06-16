@@ -1,25 +1,24 @@
 import { createControllerMethod } from '~/1st-api-server';
 import { createRestMiddleware } from '~/1st-rest-server';
 import {
-  authLogin,
-  testRequest,
-} from '../methods';
-import { useSessionController, useUserController } from '../di';
+  AuthController,
+  SessionController,
+  UserController,
+} from '../controllers';
 
 export const restMiddleware = () => createRestMiddleware([
-  ['post', '/auth/login', authLogin],
-  ['post', '/test-request', testRequest],
+  ['post', '/auth/login', createControllerMethod(AuthController, 'login')],
 
-  ['post', '/session', createControllerMethod(useSessionController(), 'create')],
-  ['put', '/session/:id', createControllerMethod(useSessionController(), 'update')],
-  ['get', '/session/:id', createControllerMethod(useSessionController(), 'get')],
-  ['get', '/session', createControllerMethod(useSessionController(), 'list')],
-  ['delete', '/session/:id', createControllerMethod(useSessionController(), 'delete')],
-  ['get', '/session/token/:token', createControllerMethod(useSessionController(), 'getByToken')],
+  ['post', '/session', createControllerMethod(SessionController, 'create')],
+  ['put', '/session/:id', createControllerMethod(SessionController, 'update')],
+  ['get', '/session/:id', createControllerMethod(SessionController, 'get')],
+  ['get', '/session', createControllerMethod(SessionController, 'list')],
+  ['delete', '/session/:id', createControllerMethod(SessionController, 'delete')],
+  ['get', '/session/token/:token', createControllerMethod(SessionController, 'getByToken')],
 
-  ['post', '/user', createControllerMethod(useUserController(), 'create')],
-  ['put', '/user/:id', createControllerMethod(useUserController(), 'update')],
-  ['get', '/user/:id', createControllerMethod(useUserController(), 'get')],
-  ['get', '/user', createControllerMethod(useUserController(), 'list')],
-  ['delete', '/user/:id', createControllerMethod(useUserController(), 'delete')],
+  ['post', '/user', createControllerMethod(UserController, 'create')],
+  ['put', '/user/:id', createControllerMethod(UserController, 'update')],
+  ['get', '/user/:id', createControllerMethod(UserController, 'get')],
+  ['get', '/user', createControllerMethod(UserController, 'list')],
+  ['delete', '/user/:id', createControllerMethod(UserController, 'delete')],
 ]);
