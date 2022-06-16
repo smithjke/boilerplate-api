@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 import express from 'express';
 import { registerDependency } from '~/1st-di';
-import { MongoService, useMongoService } from '~/1st-mongo';
+import { MongoService, useMongoService } from '~/1st-server-mongo';
 import {
   AuthService,
   jsonRpcMiddleware,
