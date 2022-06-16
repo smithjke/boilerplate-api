@@ -1,5 +1,5 @@
 import { ApiParams } from '~/1st-api';
-import { CrudController } from '~/1st-crud-server';
+import { CrudController } from '~/1st-server-crud';
 import { mapSession, mapSessionRaw, Session, SessionRaw } from '~/api';
 import { SessionService } from '../services';
 import { useSessionService } from '../di';

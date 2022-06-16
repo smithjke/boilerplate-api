@@ -1,4 +1,4 @@
-import { MongoCrudService } from '~/1st-crud-server';
+import { MongoCrudService } from '~/1st-server-crud';
 import { Session } from '~/api';
 import { SessionModel } from '../models';
 

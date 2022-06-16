@@ -1,5 +1,5 @@
-import { createControllerMethod } from '~/1st-api-server';
-import { createJsonRpcMiddleware } from '~/1st-json-rpc-server';
+import { createControllerMethod } from '~/1st-server-api';
+import { createJsonRpcMiddleware } from '~/1st-server-json-rpc';
 import {
   AuthController,
   SessionController,

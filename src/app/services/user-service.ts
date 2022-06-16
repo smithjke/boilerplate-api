@@ -1,4 +1,4 @@
-import { MongoCrudService } from '~/1st-crud-server';
+import { MongoCrudService } from '~/1st-server-crud';
 import { User } from '~/api';
 import { UserModel } from '../models';
 

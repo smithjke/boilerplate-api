@@ -1,5 +1,5 @@
 import { ApiParams } from '~/1st-api';
-import { BaseController } from '~/1st-api-server';
+import { BaseController } from '~/1st-server-api';
 import { AuthLoginDataRaw, mapAuthLoginData } from '~/api';
 import { useAuthService } from '~/app';
 

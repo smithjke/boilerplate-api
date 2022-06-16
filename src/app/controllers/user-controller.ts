@@ -1,4 +1,4 @@
-import { CrudController } from '~/1st-crud-server';
+import { CrudController } from '~/1st-server-crud';
 import { mapUser, mapUserRaw, User, UserRaw } from '~/api';
 import { useUserService } from '../di';
 

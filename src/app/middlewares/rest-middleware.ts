@@ -1,5 +1,5 @@
-import { createControllerMethod } from '~/1st-api-server';
-import { createRestMiddleware } from '~/1st-rest-server';
+import { createControllerMethod } from '~/1st-server-api';
+import { createRestMiddleware } from '~/1st-server-rest';
 import {
   AuthController,
   SessionController,

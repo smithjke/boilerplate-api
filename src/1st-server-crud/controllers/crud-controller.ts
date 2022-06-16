@@ -1,5 +1,5 @@
 import { ApiListParams, ApiListResult, ApiParams, createMapApiListResult } from '~/1st-api';
-import { BaseController } from '~/1st-api-server';
+import { BaseController } from '~/1st-server-api';
 import { CrudService } from '~/1st-crud';
 
 export abstract class CrudController<MODEL_TYPE, MODEL_TYPE_RAW> extends BaseController {
