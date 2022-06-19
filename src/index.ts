@@ -9,6 +9,7 @@ import {
   restMiddleware,
   SessionService,
   UserService,
+  useUserService,
 } from '~/app';
 
 dotenv.config();
@@ -31,10 +32,14 @@ app.get('/', (req, res) => {
 });
 
 const mongoService = useMongoService();
+const userService = useUserService();
 
 mongoService.connect()
   .then(() => {
     app.listen(PORT, () => console.log(`Listen on port ${PORT}`));
+    userService.init()
+      .then(() => console.log('User service init success'))
+      .catch((err) => console.log('User service init error >>>', err));
   })
   .catch((error) => {
     console.error('Mongo connect error >>>', error);

@@ -8,6 +8,7 @@ import {
 
 export const restMiddleware = () => createRestMiddleware([
   ['post', '/auth/login', createControllerMethod(AuthController, 'login')],
+  ['get', '/auth/init', createControllerMethod(AuthController, 'init')],
 
   ['post', '/session', createControllerMethod(SessionController, 'create')],
   ['put', '/session/:id', createControllerMethod(SessionController, 'update')],

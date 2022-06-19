@@ -1,5 +1,5 @@
 import { randomString } from '~/1st-core';
-import { Session, User } from '~/api';
+import { AuthInitResult, Session, User } from '~/api';
 import { Permission } from '../common';
 import { usePermissionService, useSessionService, useUserService } from '../di';
 import { PermissionService } from './permission-service';
@@ -71,5 +71,14 @@ export class AuthService {
     });
 
     return session.token;
+  }
+
+  async getInit(token: string): Promise<AuthInitResult> {
+    const session = await this.sessionService.getByToken(token);
+    const user = await this.userService.get(session.userId);
+    return {
+      session,
+      user,
+    };
   }
 }

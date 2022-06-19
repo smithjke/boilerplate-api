@@ -11,6 +11,16 @@ export class UserService extends MongoCrudService<User> {
       .where('name', name);
   }
 
+  async init(): Promise<void> {
+    const total = await this.model.count();
+    if (!total) {
+      await this.create({
+        name: 'admin',
+        password: 'admin',
+      });
+    }
+  }
+
   isActive(user: User): boolean {
     // @todo check ban
 

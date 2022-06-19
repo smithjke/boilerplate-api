@@ -1,4 +1,6 @@
+import { makeJsonRpcRequest } from '../utils';
 import { JsonRpcError } from './json-rpc-error';
+import { JsonRpcResponse } from '~/1st-json-rpc';
 
 export type CallOptions<PARAMS, RESULT> = {
   params?: PARAMS;
@@ -17,15 +19,20 @@ export class JsonRpcClient {
     return this.addMethodToUrl ? `${this.url}/${method}` : this.url;
   }
 
-  async call<PARAMS, RESULT>(method: string, options: CallOptions<PARAMS, RESULT>): Promise<RESULT> {
+  async call<PARAMS, RESULT>(method: string, options?: CallOptions<PARAMS, RESULT>): Promise<RESULT> {
     const randomString = String(Math.random());
 
-    const data = {
-      jsonrpc: '2.0',
+    const data = makeJsonRpcRequest(
+      randomString,
       method,
-      params: options.params ? (options.mapParams ? options.mapParams(options.params) : options.params) : void 0,
-      id: randomString,
-    };
+      options?.params
+        ? (
+          options?.mapParams
+            ? options.mapParams(options.params)
+            : options.params
+        )
+        : void 0,
+    );
 
     const response = await fetch(
       this.getMethodUrl(method),
@@ -36,24 +43,22 @@ export class JsonRpcClient {
       },
     );
 
-    const json = await response.json();
-
-    const { jsonrpc, result, error, id } = json;
+    const json: JsonRpcResponse = await response.json();
 
     if (!this.dontCheckMetaData) {
-      if (jsonrpc !== '2.0' || id !== randomString) {
+      if (json.jsonrpc !== '2.0' || json.id !== randomString) {
         throw new JsonRpcError('Internal error', -32603);
       }
     }
 
-    if (error) {
-      throw new JsonRpcError(error.message, error.code);
+    if (json.error) {
+      throw new JsonRpcError(json.error.message, json.error.code);
     }
 
-    if (typeof result === 'undefined') {
+    if (typeof json.result === 'undefined') {
       throw new JsonRpcError('No result', 0);
     }
 
-    return options.mapResult ? options.mapResult(result) : result;
+    return options?.mapResult ? options.mapResult(json.result) : json.result;
   }
 }
