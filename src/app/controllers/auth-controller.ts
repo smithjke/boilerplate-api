@@ -6,7 +6,7 @@ import { useAuthService } from '~/app';
 export class AuthController extends BaseController {
   private authService = useAuthService();
 
-  async login(paramsRaw: ApiParams<Partial<AuthLoginDataRaw>>): Promise<string> {
+  async login(paramsRaw: ApiParams<AuthLoginDataRaw>): Promise<string> {
     const data = mapAuthLoginData(paramsRaw.data);
     return this.authService.login(data.login, data.password);
   }

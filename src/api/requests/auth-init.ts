@@ -10,13 +10,13 @@ import {
 } from '../schema';
 
 export type AuthInitResult = {
-  user: Partial<User>;
-  session: Partial<Session>;
+  user: User;
+  session: Session;
 };
 
 export type AuthInitResultRaw = {
-  user: Partial<UserRaw>;
-  session: Partial<SessionRaw>;
+  user: UserRaw;
+  session: SessionRaw;
 };
 
 export function mapAuthInitResult(data: AuthInitResult): AuthInitResultRaw {

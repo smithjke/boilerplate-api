@@ -5,13 +5,13 @@ import { CrudService } from './crud-service';
 export abstract class ClientCrudService<MODEL_TYPE> implements CrudService<MODEL_TYPE> {
   protected abstract crudClient: CrudClient<MODEL_TYPE>;
 
-  create(partialData: Partial<MODEL_TYPE>): Promise<Partial<MODEL_TYPE>> {
+  create(partialData: MODEL_TYPE): Promise<MODEL_TYPE> {
     return this.crudClient.create({
       data: partialData,
     });
   }
 
-  update(partialData: Partial<MODEL_TYPE>, id: string): Promise<Partial<MODEL_TYPE>> {
+  update(partialData: MODEL_TYPE, id: string): Promise<MODEL_TYPE> {
     return this.crudClient.update({
       query: { id },
       data: partialData,
@@ -24,13 +24,13 @@ export abstract class ClientCrudService<MODEL_TYPE> implements CrudService<MODEL
     });
   }
 
-  get(id: string): Promise<Partial<MODEL_TYPE>> {
+  get(id: string): Promise<MODEL_TYPE> {
     return this.crudClient.get({
       query: { id },
     });
   }
 
-  list(query: ApiListParams['query']): Promise<ApiListResult<Partial<MODEL_TYPE>>> {
+  list(query: ApiListParams['query']): Promise<ApiListResult<MODEL_TYPE>> {
     return this.crudClient.list({
       query,
     });

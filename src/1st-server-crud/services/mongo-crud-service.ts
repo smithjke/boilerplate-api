@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { ApiListParams, ApiListResult } from '~/1st-api';
+import { ApiListQuery, ApiListResult } from '~/1st-api';
 import { CrudService } from '~/1st-crud';
 
 export abstract class MongoCrudService<MODEL_TYPE> implements CrudService<MODEL_TYPE> {
@@ -9,7 +9,15 @@ export abstract class MongoCrudService<MODEL_TYPE> implements CrudService<MODEL_
 
   protected updatedAtField: string = 'updatedAt';
 
-  async create(partialFields: Partial<MODEL_TYPE>): Promise<MODEL_TYPE> {
+  protected defaultSort: ApiListQuery['sort'] = 'updatedAt';
+
+  protected defaultDirection: ApiListQuery['direction'] = 'desc';
+
+  protected defaultLimit: ApiListQuery['limit'] = 10;
+
+  protected defaultSkip: ApiListQuery['skip'] = 0;
+
+  async create(partialFields: MODEL_TYPE): Promise<MODEL_TYPE> {
     const overFields = {};
     if (this.createdAtField) {
       overFields[this.createdAtField] = new Date();
@@ -25,7 +33,7 @@ export abstract class MongoCrudService<MODEL_TYPE> implements CrudService<MODEL_
     return model;
   }
 
-  async update(partialData: Partial<MODEL_TYPE>, id: string): Promise<MODEL_TYPE> {
+  async update(partialData: MODEL_TYPE, id: string): Promise<MODEL_TYPE> {
     const overFields = {};
     if (this.updatedAtField) {
       overFields[this.updatedAtField] = new Date();
@@ -43,12 +51,13 @@ export abstract class MongoCrudService<MODEL_TYPE> implements CrudService<MODEL_
       .where('_id', id);
   }
 
-  async list(query: ApiListParams['query']): Promise<ApiListResult<Partial<MODEL_TYPE>>> {
+  async list(query: ApiListQuery): Promise<ApiListResult<MODEL_TYPE>> {
     const total = await this.model.count();
-    const list = await this.model
-      .find()
-      .skip(query.skip ?? 0)
-      .limit(query.limit ?? 10);
+    const select = this.model.find();
+    select.sort({ [query.sort || this.defaultSort]: (query.direction || this.defaultDirection === 'asc' ? 1 : -1) });
+    select.skip(query.skip ?? this.defaultSkip);
+    select.limit(query.limit ?? this.defaultLimit);
+    const list = await select;
     return {
       list,
       total,

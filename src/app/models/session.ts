@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { virtualId } from '~/1st-server-mongo';
 import { Session } from '~/api';
 
 export const sessionSchema = new mongoose.Schema<Session>({
@@ -9,6 +10,6 @@ export const sessionSchema = new mongoose.Schema<Session>({
   updatedAt: Date,
 });
 
-sessionSchema.virtual<string>('id').get(function () { return this['_id']; });
+sessionSchema.virtual<string>('id').get(virtualId);
 
 export const SessionModel = mongoose.model<Session>('Session', sessionSchema);

@@ -12,6 +12,7 @@ export abstract class RestClient extends BaseClient {
   protected async fetchJson<T>(props: {
     method: HttpMethod;
     endpoint: string;
+    headers?: Record<string, string>;
     body?: any;
     mapResult?: (result: any) => T;
   }): Promise<T> {
@@ -19,7 +20,7 @@ export abstract class RestClient extends BaseClient {
 
     const response = await fetch(uri, {
       method: props.method,
-      headers: this.transformHeaders({ 'Content-Type': 'application/json' }),
+      headers: this.transformHeaders({ 'Content-Type': 'application/json', ...props.headers }),
       body: props.body ? JSON.stringify(props.body) : void 0,
     });
 

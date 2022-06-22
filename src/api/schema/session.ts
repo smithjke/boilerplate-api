@@ -1,24 +1,24 @@
 import { mapOrVoid } from '~/1st-api';
 
 export type Session = {
-  id: string;
-  token: string;
-  ip: string;
-  userId: string;
-  createdAt: Date;
-  updatedAt: Date;
+  id?: string;
+  token?: string;
+  ip?: string;
+  userId?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
 };
 
 export type SessionRaw = {
-  id: string;
-  token: string;
-  ip: string;
-  user_id: string;
-  created_at: string;
-  updated_at: string;
+  id?: string;
+  token?: string;
+  ip?: string;
+  user_id?: string;
+  created_at?: string;
+  updated_at?: string;
 };
 
-export function mapSession(data: Partial<Session>): Partial<SessionRaw> {
+export function mapSession(data: Session): SessionRaw {
   return {
     id: data.id,
     token: data.token,
@@ -29,7 +29,7 @@ export function mapSession(data: Partial<Session>): Partial<SessionRaw> {
   };
 }
 
-export function mapSessionRaw(dataRaw: Partial<SessionRaw>): Partial<Session> {
+export function mapSessionRaw(dataRaw: SessionRaw): Session {
   return {
     id: mapOrVoid(dataRaw.id, String),
     token: mapOrVoid(dataRaw.token, String),

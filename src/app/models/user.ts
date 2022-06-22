@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { virtualId } from '~/1st-server-mongo';
 import { User } from '~/api';
 
 export const userSchema = new mongoose.Schema<User & { _id: mongoose.Types.ObjectId }>({
@@ -9,6 +10,6 @@ export const userSchema = new mongoose.Schema<User & { _id: mongoose.Types.Objec
   updatedAt: Date,
 });
 
-userSchema.virtual<string>('id').get(function () { return this['_id']; });
+userSchema.virtual<string>('id').get(virtualId);
 
 export const UserModel = mongoose.model<User>('User', userSchema);

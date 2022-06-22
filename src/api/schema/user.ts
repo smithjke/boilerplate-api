@@ -1,20 +1,22 @@
+import { mapOrVoid } from '~/1st-api';
+
 export type User = {
-  id: string;
-  name: string;
-  password: string;
-  createdAt: Date;
-  updatedAt: Date;
+  id?: string;
+  name?: string;
+  password?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
 };
 
 export type UserRaw = {
-  id: string;
-  name: string;
-  password: string;
-  created_at: string;
-  updated_at: string;
+  id?: string;
+  name?: string;
+  password?: string;
+  created_at?: string;
+  updated_at?: string;
 };
 
-export function mapUser(data: Partial<User>): Partial<UserRaw> {
+export function mapUser(data: User): UserRaw {
   return {
     id: data.id,
     name: data.name,
@@ -24,12 +26,12 @@ export function mapUser(data: Partial<User>): Partial<UserRaw> {
   };
 }
 
-export function mapUserRaw(dataRaw: Partial<UserRaw>): Partial<User> {
+export function mapUserRaw(dataRaw: UserRaw): User {
   return {
-    id: dataRaw.id ? String(dataRaw.id) : null,
-    name: dataRaw.name ? String(dataRaw.name) : null,
-    password: dataRaw.password ? String(dataRaw.password) : null,
-    createdAt: dataRaw.created_at ? new Date(dataRaw.created_at) : null,
-    updatedAt: dataRaw.updated_at ? new Date(dataRaw.updated_at) : null,
+    id: mapOrVoid(dataRaw.id, String),
+    name: mapOrVoid(dataRaw.name, String),
+    password: mapOrVoid(dataRaw.password, String),
+    createdAt: mapOrVoid(dataRaw.created_at, (date) => new Date(date)),
+    updatedAt: mapOrVoid(dataRaw.updated_at, (date) => new Date(date)),
   };
 }

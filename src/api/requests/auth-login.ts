@@ -1,4 +1,4 @@
-import { mapOrNull, mapOrVoid } from '~/1st-api';
+import { mapOrVoid } from '~/1st-api';
 
 export type AuthLoginData = {
   login: string;
@@ -10,16 +10,16 @@ export type AuthLoginDataRaw = {
   password: string;
 };
 
-export function mapAuthLoginData(data: Partial<AuthLoginData>): Partial<AuthLoginDataRaw> {
+export function mapAuthLoginData(data: AuthLoginData): AuthLoginDataRaw {
   return {
     login: mapOrVoid(data.login, String),
     password: mapOrVoid(data.password, String),
   };
 }
 
-export function mapAuthLoginDataRaw(dataRaw: Partial<AuthLoginDataRaw>): Partial<AuthLoginData> {
+export function mapAuthLoginDataRaw(dataRaw: AuthLoginDataRaw): AuthLoginData {
   return {
-    login: mapOrNull(dataRaw.login, String),
-    password: mapOrNull(dataRaw.password, String),
+    login: mapOrVoid(dataRaw.login, String),
+    password: mapOrVoid(dataRaw.password, String),
   };
 }

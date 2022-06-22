@@ -10,7 +10,7 @@ import {
 export class AuthClient extends RestClient {
   protected url = '/api';
 
-  login(params: ApiParams<Partial<AuthLoginData>>): Promise<string> {
+  login(params: ApiParams<AuthLoginData>): Promise<string> {
     return this.fetchText({
       method: 'post',
       endpoint: '/auth/login',
@@ -23,6 +23,8 @@ export class AuthClient extends RestClient {
       method: 'get',
       endpoint: '/auth/init',
       mapResult: mapAuthInitResultRaw,
+      // @todo select headers send type
+      headers: { sToken: params.token },
     });
   }
 }

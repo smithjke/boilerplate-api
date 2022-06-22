@@ -9,11 +9,11 @@ import { RestClient } from '~/1st-rest';
 import { CrudClient } from './crud-client';
 
 export abstract class CrudRestClient<MODEL_TYPE, MODEL_TYPE_RAW> extends RestClient implements CrudClient<MODEL_TYPE> {
-  protected abstract mapModel: (model: Partial<MODEL_TYPE>) => Partial<MODEL_TYPE_RAW>;
+  protected abstract mapModel: (model: MODEL_TYPE) => MODEL_TYPE_RAW;
 
-  protected abstract mapModelRaw: (modelRaw: Partial<MODEL_TYPE_RAW>) => Partial<MODEL_TYPE>;
+  protected abstract mapModelRaw: (modelRaw: MODEL_TYPE_RAW) => MODEL_TYPE;
 
-  create(params: ApiParams<Partial<MODEL_TYPE>>): Promise<Partial<MODEL_TYPE>> {
+  create(params: ApiParams<MODEL_TYPE>): Promise<MODEL_TYPE> {
     return this.fetch({
       method: 'post',
       endpoint: '',
@@ -22,7 +22,7 @@ export abstract class CrudRestClient<MODEL_TYPE, MODEL_TYPE_RAW> extends RestCli
     });
   }
 
-  update(params: ApiParams<Partial<MODEL_TYPE>, { id: string; }>): Promise<Partial<MODEL_TYPE>> {
+  update(params: ApiParams<MODEL_TYPE, { id: string; }>): Promise<MODEL_TYPE> {
     const { id } = params.query;
     return this.fetch({
       method: 'put',
@@ -32,7 +32,7 @@ export abstract class CrudRestClient<MODEL_TYPE, MODEL_TYPE_RAW> extends RestCli
     });
   }
 
-  list(params: ApiListParams): Promise<ApiListResult<Partial<MODEL_TYPE>>> {
+  list(params: ApiListParams): Promise<ApiListResult<MODEL_TYPE>> {
     const paramsRaw = params;
     return this.fetch({
       method: 'get',
@@ -41,7 +41,7 @@ export abstract class CrudRestClient<MODEL_TYPE, MODEL_TYPE_RAW> extends RestCli
     });
   }
 
-  get(params: ApiParams<void, { id: string; }>): Promise<Partial<MODEL_TYPE>> {
+  get(params: ApiParams<void, { id: string; }>): Promise<MODEL_TYPE> {
     const { id } = params.query;
     return this.fetch({
       method: 'get',
