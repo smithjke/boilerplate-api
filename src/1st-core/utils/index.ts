@@ -1,3 +1,4 @@
+export * from './date';
 export * from './make-async-data';
 export * from './make-error-async-data';
 export * from './make-loading-async-data';
