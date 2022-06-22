@@ -54,7 +54,7 @@ export abstract class MongoCrudService<MODEL_TYPE> implements CrudService<MODEL_
   async list(query: ApiListQuery): Promise<ApiListResult<MODEL_TYPE>> {
     const total = await this.model.count();
     const select = this.model.find();
-    select.sort({ [query.sort || this.defaultSort]: (query.direction || this.defaultDirection === 'asc' ? 1 : -1) });
+    select.sort({ [query.sort || this.defaultSort]: (query.direction || this.defaultDirection) === 'asc' ? 1 : -1 });
     select.skip(query.skip ?? this.defaultSkip);
     select.limit(query.limit ?? this.defaultLimit);
     const list = await select;
