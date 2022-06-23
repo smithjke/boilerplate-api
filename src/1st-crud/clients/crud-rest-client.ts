@@ -1,6 +1,6 @@
 import { makeQueryString } from '~/1st-core';
 import {
-  ApiListParams,
+  ApiListQuery,
   ApiListResult,
   ApiParams,
   createMapApiListResult,
@@ -32,7 +32,7 @@ export abstract class CrudRestClient<MODEL_TYPE, MODEL_TYPE_RAW> extends RestCli
     });
   }
 
-  list(params: ApiListParams): Promise<ApiListResult<MODEL_TYPE>> {
+  list(params: ApiParams<void, ApiListQuery>): Promise<ApiListResult<MODEL_TYPE>> {
     const paramsRaw = params;
     return this.fetch({
       method: 'get',

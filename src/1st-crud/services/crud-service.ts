@@ -1,4 +1,4 @@
-import { ApiListParams, ApiListResult } from '~/1st-api';
+import { ApiListQuery, ApiListResult } from '~/1st-api';
 
 export interface CrudService<MODEL_TYPE> {
   create(partialData: MODEL_TYPE): Promise<MODEL_TYPE>;
@@ -9,5 +9,5 @@ export interface CrudService<MODEL_TYPE> {
 
   get(id: string): Promise<MODEL_TYPE>;
 
-  list(query: ApiListParams['query']): Promise<ApiListResult<MODEL_TYPE>>;
+  list(query: ApiListQuery): Promise<ApiListResult<MODEL_TYPE>>;
 }

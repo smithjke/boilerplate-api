@@ -1,4 +1,4 @@
-import { ApiListParams, ApiListResult } from '~/1st-api';
+import { ApiListQuery, ApiListResult } from '~/1st-api';
 import { CrudClient } from '../clients';
 import { CrudService } from './crud-service';
 
@@ -30,7 +30,7 @@ export abstract class ClientCrudService<MODEL_TYPE> implements CrudService<MODEL
     });
   }
 
-  list(query: ApiListParams['query']): Promise<ApiListResult<MODEL_TYPE>> {
+  list(query: ApiListQuery): Promise<ApiListResult<MODEL_TYPE>> {
     return this.crudClient.list({
       query,
     });
