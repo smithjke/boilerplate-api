@@ -1,3 +1,4 @@
+import { ApiParams } from '~/1st-api';
 import { CrudRestClient } from '~/1st-crud';
 import {
   mapSession,
@@ -5,7 +6,6 @@ import {
   Session,
   SessionRaw,
 } from '../schema';
-import { ApiParams } from '~/1st-api';
 
 export class SessionRestClient extends CrudRestClient<Session, SessionRaw> {
   protected url = '/api/session';

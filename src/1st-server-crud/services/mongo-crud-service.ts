@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose, { HydratedDocument, Query } from 'mongoose';
 import { ApiListQuery, ApiListResult } from '~/1st-api';
 import { CrudService } from '~/1st-crud';
 
@@ -16,6 +16,11 @@ export abstract class MongoCrudService<MODEL_TYPE> implements CrudService<MODEL_
   protected defaultLimit: ApiListQuery['limit'] = 10;
 
   protected defaultSkip: ApiListQuery['skip'] = 0;
+
+  protected modifyListSelect: (
+    select: Query<Array<HydratedDocument<MODEL_TYPE>>, HydratedDocument<MODEL_TYPE>>,
+    query: ApiListQuery,
+  ) => void = () => void 0;
 
   async create(partialFields: MODEL_TYPE): Promise<MODEL_TYPE> {
     const overFields = {};
@@ -57,6 +62,7 @@ export abstract class MongoCrudService<MODEL_TYPE> implements CrudService<MODEL_
     select.sort({ [query.sort || this.defaultSort]: (query.direction || this.defaultDirection) === 'asc' ? 1 : -1 });
     select.skip(query.skip ?? this.defaultSkip);
     select.limit(query.limit ?? this.defaultLimit);
+    this.modifyListSelect(select, query);
     const list = await select;
     return {
       list,

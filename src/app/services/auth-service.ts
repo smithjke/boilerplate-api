@@ -1,15 +1,10 @@
 import { randomString } from '~/1st-core';
-import { AuthInitResult, Session, User } from '~/api';
+import { AuthInitResult, Role, Session } from '~/api';
 import { Permission } from '../common';
 import { usePermissionService, useSessionService, useUserService } from '../di';
 import { PermissionService } from './permission-service';
 import { SessionService } from './session-service';
 import { UserService } from './user-service';
-
-export type SessionData = {
-  session: Session;
-  user: User;
-};
 
 export class AuthService {
   private readonly permissionService: PermissionService;
@@ -24,35 +19,32 @@ export class AuthService {
     this.userService = useUserService();
   }
 
-  async read(token: string, permission?: Permission): Promise<SessionData> {
+  async getSession(token: string, permission?: Permission): Promise<Session> {
     const session = await this.sessionService.getByToken(token);
 
     if (!session) {
       throw new Error('No session');
     }
 
-    const user = await this.userService.get(session.userId);
+    session.user = await this.userService.getWithRoles(session.userId);
 
-    if (!user) {
+    if (!session.user) {
       throw new Error('No user');
     }
 
-    if (!this.userService.isActive(user)) {
+    if (!this.userService.isActive(session.user)) {
       throw new Error('User is not active');
     }
 
     if (permission) {
-      const permissionCheckResult = await this.permissionService.check(user, permission);
+      const permissionCheckResult = await this.permissionService.check(session.user, permission);
 
       if (!permissionCheckResult) {
         throw new Error('Access denied');
       }
     }
 
-    return {
-      session,
-      user,
-    };
+    return session;
   }
 
   async login(name: string, password: string): Promise<string> {
@@ -75,10 +67,18 @@ export class AuthService {
 
   async getInit(token: string): Promise<AuthInitResult> {
     const session = await this.sessionService.getByToken(token);
-    const user = await this.userService.get(session.userId);
+    const user = await this.userService.getWithRoles(session.userId);
+    const permissions = Object.keys(this.getPermissions(user.roles));
     return {
       session,
       user,
+      permissions,
     };
+  }
+
+  getPermissions(roles: Array<Role>): Record<string, true> {
+    const data = {};
+    roles.forEach((role) => role.permissions.split('|').map((permission) => data[permission] = true));
+    return data;
   }
 }

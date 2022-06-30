@@ -18,10 +18,11 @@ export class AuthController extends BaseController {
         user: {
           id: init.user.id,
           name: init.user.name,
+          roles: init.user.roles.map((role) => ({
+            name: role.name,
+          })),
         },
-        session: {
-          id: init.session.id,
-        },
+        permissions: init.permissions,
       };
     }
     throw new Error('Not auth');

@@ -4,9 +4,11 @@ import { registerDependency } from '~/1st-di';
 import { MongoService, useMongoService } from '~/1st-server-mongo';
 import {
   AuthService,
+  GuardService,
   jsonRpcMiddleware,
   PermissionService,
   restMiddleware,
+  RoleService,
   SessionService,
   UserService,
   useUserService,
@@ -15,8 +17,10 @@ import {
 dotenv.config();
 
 registerDependency('MONGO_SERVICE', () => new MongoService());
+registerDependency('GUARD_SERVICE', () => new GuardService());
 registerDependency('AUTH_SERVICE', () => new AuthService());
 registerDependency('PERMISSION_SERVICE', () => new PermissionService());
+registerDependency('ROLE_SERVICE', () => new RoleService());
 registerDependency('SESSION_SERVICE', () => new SessionService());
 registerDependency('USER_SERVICE', () => new UserService());
 

@@ -1,6 +1,6 @@
-import { ApiListParams, ApiListResult, ApiParams, createMapApiListResult } from '~/1st-api';
-import { BaseController } from '~/1st-server-api';
+import { ApiListQuery, ApiListResult, ApiParams, createMapApiListResult } from '~/1st-api';
 import { CrudService } from '~/1st-crud';
+import { BaseController } from '~/1st-server-api';
 
 export abstract class CrudController<MODEL_TYPE, MODEL_TYPE_RAW> extends BaseController {
   protected abstract crudService: CrudService<MODEL_TYPE>;
@@ -34,7 +34,7 @@ export abstract class CrudController<MODEL_TYPE, MODEL_TYPE_RAW> extends BaseCon
     return this.mapModel(result);
   }
 
-  async list(params: ApiListParams): Promise<ApiListResult<MODEL_TYPE_RAW>> {
+  async list(params: ApiParams<void, ApiListQuery>): Promise<ApiListResult<MODEL_TYPE_RAW>> {
     const result = await this.crudService.list(params.query);
     return createMapApiListResult(this.mapModel)(result);
   }
