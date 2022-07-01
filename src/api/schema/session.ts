@@ -1,5 +1,10 @@
-import { mapOrVoid } from '~/1st-api';
-import { mapUser, mapUserRaw, User, UserRaw } from '~/api';
+import { mapOrNull, mapOrVoid } from '~/1st-api';
+import {
+  mapUser,
+  mapUserRaw,
+  User,
+  UserRaw,
+} from '~/api';
 
 export type Session = {
   id?: string;
@@ -39,7 +44,7 @@ export function mapSessionRaw(dataRaw: SessionRaw): Session {
     token: mapOrVoid(dataRaw.token, String),
     ip: mapOrVoid(dataRaw.ip, String),
     userId: mapOrVoid(dataRaw.user_id, String),
-    user: mapOrVoid(dataRaw.user, mapUserRaw),
+    user: mapOrNull(dataRaw.user, mapUserRaw),
     createdAt: mapOrVoid(dataRaw.created_at, (date) => new Date(date)),
     updatedAt: mapOrVoid(dataRaw.updated_at, (date) => new Date(date)),
   };

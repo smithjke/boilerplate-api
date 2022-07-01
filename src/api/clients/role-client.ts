@@ -7,7 +7,7 @@ import {
 } from '../schema';
 
 export class RoleRestClient extends CrudRestClient<Role, RoleRaw> {
-  protected url = '/api/user';
+  protected url = '/api/role';
 
   protected mapModel = mapRole;
 
