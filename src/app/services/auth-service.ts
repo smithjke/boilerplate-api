@@ -50,8 +50,7 @@ export class AuthService {
   async login(name: string, password: string): Promise<string> {
     const user = await this.userService.getByName(name);
 
-    // @todo check password hash
-    if (!user || user.password !== password) {
+    if (!this.userService.checkPassword(user, password)) {
       throw new Error('Incorrect data');
     }
 

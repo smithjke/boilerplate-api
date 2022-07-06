@@ -22,30 +22,30 @@ export abstract class MongoCrudService<MODEL_TYPE> implements CrudService<MODEL_
     query: ApiListQuery,
   ) => void = () => void 0;
 
-  async create(partialFields: MODEL_TYPE): Promise<MODEL_TYPE> {
-    const overFields = {};
+  async create(partialData: MODEL_TYPE): Promise<MODEL_TYPE> {
+    const overData = {};
     if (this.createdAtField) {
-      overFields[this.createdAtField] = new Date();
+      overData[this.createdAtField] = new Date();
     }
     if (this.updatedAtField) {
-      overFields[this.updatedAtField] = new Date();
+      overData[this.updatedAtField] = new Date();
     }
     const model = new this.model({
-      ...partialFields,
-      ...overFields,
+      ...partialData,
+      ...overData,
     });
     await model.save();
     return model;
   }
 
   async update(partialData: MODEL_TYPE, id: string): Promise<MODEL_TYPE> {
-    const overFields = {};
+    const overData = {};
     if (this.updatedAtField) {
-      overFields[this.updatedAtField] = new Date();
+      overData[this.updatedAtField] = new Date();
     }
     await this.model.updateOne({ '_id': id }, {
       ...partialData,
-      ...overFields,
+      ...overData,
     });
     return this.get(id);
   }

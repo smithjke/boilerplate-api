@@ -2,7 +2,13 @@ import mongoose from 'mongoose';
 import { virtualId } from '~/1st-server-mongo';
 import { Role, User } from '~/api';
 
-export const userSchema = new mongoose.Schema<User & { _id: mongoose.Types.ObjectId }>({
+export type MongoUser = User & {
+  _id?: mongoose.Types.ObjectId,
+  password?: string,
+  salt?: string,
+};
+
+export const userSchema = new mongoose.Schema<MongoUser>({
   name: String,
   password: String,
   salt: String,

@@ -1,11 +1,15 @@
-import { mapOrVoid } from '~/1st-api';
-import { mapRole, mapRoleRaw, Role, RoleRaw } from './role';
+import { mapIfExists } from '~/1st-api';
+import {
+  mapRole,
+  mapRoleRaw,
+  Role,
+  RoleRaw,
+} from './role';
 
 export type User = {
   id?: string;
   name?: string;
-  password?: string;
-  salt?: string;
+  newPassword?: string;
   rolesIds?: Array<string>;
   roles?: Array<Role>;
   createdAt?: Date;
@@ -15,8 +19,7 @@ export type User = {
 export type UserRaw = {
   id?: string;
   name?: string;
-  password?: string;
-  salt?: string;
+  new_password?: string;
   roles_ids?: Array<string>;
   roles?: Array<RoleRaw>;
   created_at?: string;
@@ -25,26 +28,24 @@ export type UserRaw = {
 
 export function mapUser(data: User): UserRaw {
   return {
-    id: data.id,
-    name: data.name,
-    password: data.password,
-    salt: data.salt,
-    roles_ids: data.rolesIds?.map(String),
-    roles: data.roles?.map(mapRole),
-    created_at: data.createdAt?.toISOString(),
-    updated_at: data.updatedAt?.toISOString(),
+    id: mapIfExists(data.id, String),
+    name: mapIfExists(data.name, String),
+    new_password: mapIfExists(data.newPassword, String),
+    roles_ids: mapIfExists(data.rolesIds, (ids) => ids.map(String)),
+    roles: mapIfExists(data.roles, (roles) => roles.map(mapRole)),
+    created_at: mapIfExists(data.createdAt, (date) => date.toISOString()),
+    updated_at: mapIfExists(data.updatedAt, (date) => date.toISOString()),
   };
 }
 
 export function mapUserRaw(dataRaw: UserRaw): User {
   return {
-    id: mapOrVoid(dataRaw.id, String),
-    name: mapOrVoid(dataRaw.name, String),
-    password: mapOrVoid(dataRaw.password, String),
-    salt: mapOrVoid(dataRaw.salt, String),
-    rolesIds: mapOrVoid(dataRaw.roles_ids, (roles_ids) => roles_ids.map(String)),
-    roles: mapOrVoid(dataRaw.roles, (roles) => roles.map(mapRoleRaw)),
-    createdAt: mapOrVoid(dataRaw.created_at, (date) => new Date(date)),
-    updatedAt: mapOrVoid(dataRaw.updated_at, (date) => new Date(date)),
+    id: mapIfExists(dataRaw.id, String),
+    name: mapIfExists(dataRaw.name, String),
+    newPassword: mapIfExists(dataRaw.new_password, String),
+    rolesIds: mapIfExists(dataRaw.roles_ids, (ids) => ids.map(String)),
+    roles: mapIfExists(dataRaw.roles, (roles) => roles.map(mapRoleRaw)),
+    createdAt: mapIfExists(dataRaw.created_at, (date) => new Date(date)),
+    updatedAt: mapIfExists(dataRaw.updated_at, (date) => new Date(date)),
   };
 }
