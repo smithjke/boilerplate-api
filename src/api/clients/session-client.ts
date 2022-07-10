@@ -16,7 +16,7 @@ export class SessionRestClient extends CrudRestClient<Session, SessionRaw> {
 
   getByToken(params: ApiParams<void, { token: string; }>): Promise<Session> {
     const { token } = params.query;
-    return this.fetch({
+    return this.fetchJson({
       method: 'get',
       endpoint: `/token/${token}`,
       mapResult: this.mapModelRaw,

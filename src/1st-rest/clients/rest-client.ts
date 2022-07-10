@@ -1,6 +1,5 @@
-import { BaseClient, HttpMethod } from '~/1st-api';
-
-export type RestResponseType = 'text' | 'json';
+import { BaseClient } from '~/1st-api';
+import { HttpMethod } from '~/1st-rest';
 
 export abstract class RestClient extends BaseClient {
   protected abstract url: string;
@@ -12,7 +11,7 @@ export abstract class RestClient extends BaseClient {
   protected async fetchJson<T>(props: {
     method: HttpMethod;
     endpoint: string;
-    headers?: Record<string, string>;
+    headers?: HeadersInit;
     body?: any;
     mapResult?: (result: any) => T;
   }): Promise<T> {
@@ -20,7 +19,7 @@ export abstract class RestClient extends BaseClient {
 
     const response = await fetch(uri, {
       method: props.method,
-      headers: this.transformHeaders({ 'Content-Type': 'application/json', ...props.headers }),
+      headers: this.transformHeaders(props.headers),
       body: props.body ? JSON.stringify(props.body) : void 0,
     });
 
@@ -35,13 +34,14 @@ export abstract class RestClient extends BaseClient {
   protected async fetchText(props: {
     method: HttpMethod;
     endpoint: string;
+    headers?: HeadersInit;
     body?: any;
   }): Promise<string> {
     const uri = `${this.url}${props.endpoint}`;
 
     const response = await fetch(uri, {
       method: props.method,
-      headers: this.transformHeaders({}),
+      headers: this.transformHeaders(props.headers),
       body: props.body ? JSON.stringify(props.body) : void 0,
     });
 
@@ -50,36 +50,5 @@ export abstract class RestClient extends BaseClient {
     }
 
     throw new Error(response.statusText);
-  }
-
-  protected async fetch<T>(props: {
-    method: HttpMethod;
-    endpoint: string;
-    body?: any;
-    type?: RestResponseType;
-    mapResult?: (result: any) => T;
-  }): Promise<T> {
-    const uri = `${this.url}${props.endpoint}`;
-
-    const response = await fetch(uri, {
-      method: props.method,
-      headers: this.transformHeaders({ 'Content-Type': 'application/json' }),
-      body: props.body ? JSON.stringify(props.body) : void 0,
-    });
-
-    const responseType = props.type || 'json';
-
-    if (responseType === 'json') {
-      const json = await response.json();
-      return props.mapResult ? props.mapResult(json) : json;
-    }
-
-    const text = await response.text();
-    return props.mapResult ? props.mapResult(text) : (text as unknown as T);
-  }
-
-  protected async call(address: string, params: object): Promise<object> {
-    console.log('RestClient call >>>', address, params);
-    return { a: 1 };
   }
 }

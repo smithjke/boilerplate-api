@@ -1,4 +1,4 @@
-export type ApiParams<DATA = void, QUERY = void> = {
+export type ApiParams<DATA = any, QUERY = any> = {
   query?: QUERY;
   token?: string;
   data?: DATA;

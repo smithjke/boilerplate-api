@@ -1,7 +1,6 @@
 import { CrudController } from '~/1st-server-crud';
-import { mapRole, mapRoleRaw, Role, RoleRaw } from '~/api';
+import { mapRole, mapRoleRaw, Permission, Role, RoleRaw } from '~/api';
 import { useGuardService, useRoleService } from '../di';
-import { Permission } from '../common';
 
 export class RoleController extends CrudController<Role, RoleRaw> {
   private permissions: Record<string, Array<Permission>> = {

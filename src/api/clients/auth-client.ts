@@ -8,12 +8,12 @@ import {
 } from '../requests';
 
 export class AuthClient extends RestClient {
-  protected url = '/api';
+  protected url = '/api/auth';
 
   login(params: ApiParams<AuthLoginData>): Promise<string> {
     return this.fetchText({
       method: 'post',
-      endpoint: '/auth/login',
+      endpoint: '/login',
       body: createMapApiParams(mapAuthLoginData)(params).data,
     });
   }
@@ -21,10 +21,11 @@ export class AuthClient extends RestClient {
   init(params: ApiParams): Promise<AuthInitResult> {
     return this.fetchJson({
       method: 'get',
-      endpoint: '/auth/init',
+      endpoint: '/init',
       mapResult: mapAuthInitResultRaw,
-      // @todo select headers send type
-      headers: { sToken: params.token },
+      headers: {
+        'session-token': params.token,
+      },
     });
   }
 }

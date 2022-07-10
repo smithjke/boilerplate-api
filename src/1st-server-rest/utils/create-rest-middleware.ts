@@ -1,5 +1,6 @@
 import express, { Request, Response } from 'express';
-import { ApiParams, HttpMethod } from '~/1st-api';
+import { ApiParams } from '~/1st-api';
+import { HttpMethod } from '~/1st-rest';
 
 export type RestMethod = (params: ApiParams<any, any>) => Promise<any>;
 export type RestRoute = [HttpMethod, string, RestMethod];

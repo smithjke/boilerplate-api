@@ -1,8 +1,7 @@
 import { ApiParams } from '~/1st-api';
 import { CrudController } from '~/1st-server-crud';
-import { mapSession, mapSessionRaw, Session, SessionRaw } from '~/api';
+import { mapSession, mapSessionRaw, Permission, Session, SessionRaw } from '~/api';
 import { useGuardService, useSessionService } from '../di';
-import { Permission } from '../common';
 
 export class SessionController extends CrudController<Session, SessionRaw> {
   private permissions: Record<string, Array<Permission>> = {

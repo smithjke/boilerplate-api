@@ -1,6 +1,6 @@
 import { ApiParams } from '~/1st-api';
+import { Permission } from '~/api';
 import { useAuthService } from '../di';
-import { Permission } from '../common';
 
 export class GuardService {
   private authService = useAuthService();
