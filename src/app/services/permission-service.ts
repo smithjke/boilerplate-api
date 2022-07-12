@@ -1,5 +1,4 @@
-import { User } from '~/api';
-import { Permission } from '../common';
+import { Permission, User } from '~/api';
 
 export class PermissionService {
   async check(user: User, permission: Permission): Promise<boolean> {

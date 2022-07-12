@@ -1,6 +1,5 @@
 import { randomString } from '~/1st-core';
-import { AuthInitResult, Role, Session } from '~/api';
-import { Permission } from '../common';
+import { AuthInitResult, Permission, Role, Session } from '~/api';
 import { usePermissionService, useSessionService, useUserService } from '../di';
 import { PermissionService } from './permission-service';
 import { SessionService } from './session-service';
