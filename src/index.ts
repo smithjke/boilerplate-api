@@ -6,7 +6,6 @@ import {
   AuthService,
   GuardService,
   jsonRpcMiddleware,
-  PermissionService,
   restMiddleware,
   RoleService,
   SessionService,
@@ -17,9 +16,8 @@ import {
 dotenv.config();
 
 registerDependency('MONGO_SERVICE', () => new MongoService());
-registerDependency('GUARD_SERVICE', () => new GuardService());
 registerDependency('AUTH_SERVICE', () => new AuthService());
-registerDependency('PERMISSION_SERVICE', () => new PermissionService());
+registerDependency('GUARD_SERVICE', () => new GuardService());
 registerDependency('ROLE_SERVICE', () => new RoleService());
 registerDependency('SESSION_SERVICE', () => new SessionService());
 registerDependency('USER_SERVICE', () => new UserService());
