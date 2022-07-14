@@ -1,46 +1,37 @@
+import { ApiError, ApiErrorCode } from '~/1st-api';
 import { randomString } from '~/1st-core';
 import { AuthInitResult, Permission, Role, Session } from '~/api';
-import { usePermissionService, useSessionService, useUserService } from '../di';
-import { PermissionService } from './permission-service';
+import { useSessionService, useUserService } from '../di';
 import { SessionService } from './session-service';
 import { UserService } from './user-service';
 
 export class AuthService {
-  private readonly permissionService: PermissionService;
-
   private readonly sessionService: SessionService;
 
   private readonly userService: UserService;
 
   constructor() {
-    this.permissionService = usePermissionService();
     this.sessionService = useSessionService();
     this.userService = useUserService();
   }
 
-  async getSession(token: string, permission?: Permission): Promise<Session> {
+  async getSession(token: string): Promise<Session> {
     const session = await this.sessionService.getByToken(token);
 
     if (!session) {
-      throw new Error('No session');
+      throw new ApiError('Unauthorized', ApiErrorCode.UNAUTHORIZED);
     }
+
+    // @todo check session lifetime
 
     session.user = await this.userService.getWithRoles(session.userId);
 
     if (!session.user) {
-      throw new Error('No user');
+      throw new ApiError('Unauthorized', ApiErrorCode.UNAUTHORIZED);
     }
 
     if (!this.userService.isActive(session.user)) {
-      throw new Error('User is not active');
-    }
-
-    if (permission) {
-      const permissionCheckResult = await this.permissionService.check(session.user, permission);
-
-      if (!permissionCheckResult) {
-        throw new Error('Access denied');
-      }
+      throw new ApiError('Forbidden', ApiErrorCode.FORBIDDEN);
     }
 
     return session;
@@ -50,7 +41,7 @@ export class AuthService {
     const user = await this.userService.getByName(name);
 
     if (!this.userService.checkPassword(user, password)) {
-      throw new Error('Incorrect data');
+      throw new ApiError('Incorrect data', ApiErrorCode.UNAUTHORIZED);
     }
 
     const session = await this.sessionService.create({
@@ -64,19 +55,28 @@ export class AuthService {
   }
 
   async getInit(token: string): Promise<AuthInitResult> {
-    const session = await this.sessionService.getByToken(token);
-    const user = await this.userService.getWithRoles(session.userId);
-    const permissions = Object.keys(this.getPermissions(user.roles));
+    const session = await this.getSession(token);
     return {
-      session,
-      user,
-      permissions,
+      user: {
+        id: session.user.id,
+        name: session.user.name,
+        roles: session.user.roles.map((role) => ({
+          name: role.name,
+        })),
+      },
+      permissions: Object.keys(this.getPermissionRecord(session.user.roles)),
     };
   }
 
-  getPermissions(roles: Array<Role>): Record<string, true> {
+  getPermissionRecord(roles: Array<Role>): Record<Permission, boolean> {
     const data = {};
-    roles.forEach((role) => role.permissions.split('|').map((permission) => data[permission] = true));
-    return data;
+
+    roles.forEach(
+      (role) => role.permissions
+        .split('|')
+        .forEach((permission) => data[permission] = true)
+    );
+
+    return data as Record<Permission, boolean>;
   }
 }
