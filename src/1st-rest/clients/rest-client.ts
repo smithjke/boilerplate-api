@@ -1,5 +1,5 @@
-import { BaseClient } from '~/1st-api';
-import { HttpMethod } from '~/1st-rest';
+import { ApiError, BaseClient } from '~/1st-api';
+import { getApiErrorCodeByHttpCode, HttpMethod } from '~/1st-rest';
 
 export abstract class RestClient extends BaseClient {
   protected abstract url: string;
@@ -28,7 +28,7 @@ export abstract class RestClient extends BaseClient {
       return props.mapResult ? props.mapResult(json) : json;
     }
 
-    throw new Error(response.statusText);
+    throw new ApiError(response.statusText, getApiErrorCodeByHttpCode(response.status));
   }
 
   protected async fetchText(props: {
@@ -49,6 +49,6 @@ export abstract class RestClient extends BaseClient {
       return response.text();
     }
 
-    throw new Error(response.statusText);
+    throw new ApiError(response.statusText, getApiErrorCodeByHttpCode(response.status));
   }
 }

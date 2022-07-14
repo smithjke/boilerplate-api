@@ -1,17 +1,9 @@
 import express, { Request, Response } from 'express';
 import { ApiError, ApiErrorCode, ApiParams } from '~/1st-api';
-import { HttpMethod } from '~/1st-rest';
+import { apiErrorCode2HttpCode, HttpMethod } from '~/1st-rest';
 
 export type RestMethod = (params: ApiParams) => Promise<any>;
 export type RestRoute = [HttpMethod, string, RestMethod];
-
-const apiError2httpCode: Record<ApiErrorCode, number> = {
-  [ApiErrorCode.BAD_REQUEST]: 400,
-  [ApiErrorCode.UNAUTHORIZED]: 401,
-  [ApiErrorCode.FORBIDDEN]: 403,
-  [ApiErrorCode.NOT_FOUND]: 404,
-  [ApiErrorCode.INTERNAL_SERVER_ERROR]: 500,
-};
 
 const SOMETHING_WRONG = 'Something wrong';
 
@@ -37,7 +29,7 @@ export function createRestMiddleware(routes: Array<RestRoute>) {
         .catch((error: ApiError) => {
           console.error('error >>>', error);
           res
-            .status(apiError2httpCode[error.code || ApiErrorCode.INTERNAL_SERVER_ERROR])
+            .status(apiErrorCode2HttpCode[error.code || ApiErrorCode.INTERNAL_SERVER_ERROR])
             .send(error.code ? error.message : SOMETHING_WRONG);
         });
     });
@@ -46,7 +38,7 @@ export function createRestMiddleware(routes: Array<RestRoute>) {
   const errorHandler = async (error: Error, req: Request, res: Response, _) => {
     console.error('handled error >>>', error);
     res
-      .status(apiError2httpCode[ApiErrorCode.INTERNAL_SERVER_ERROR])
+      .status(apiErrorCode2HttpCode[ApiErrorCode.INTERNAL_SERVER_ERROR])
       .send(SOMETHING_WRONG);
   };
 
