@@ -5,6 +5,8 @@ export type Api = {
   setErrorHandler: (errorHandler: (error: ApiError) => void) => void;
 };
 
+export type ApiMethod = (...args: Array<any>) => any;
+
 export function createApi<T extends Record<string, BaseClient>>(clients: T): T & Api {
   const methods: any = {
     tokenGetter: null,
@@ -22,7 +24,7 @@ export function createApi<T extends Record<string, BaseClient>>(clients: T): T &
 
   Object.keys(clients).forEach((clientKey) => {
     proxyClients[clientKey] = new Proxy(clients[clientKey], {
-      get(target: Record<string, (...args: any) => any>, p: string) {
+      get(target: Record<string, ApiMethod | any>, p: string) {
         if (typeof target[p] === 'function') {
           return (...props: Array<any>) => {
             if (props[0].query || props[0].data) {
