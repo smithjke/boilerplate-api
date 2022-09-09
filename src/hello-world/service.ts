@@ -1,22 +1,8 @@
-import TPCore from '~/2p-core';
 import { HelloWorld } from '~/api';
 
 const firstDate = new Date();
 
-type ServiceFindAllQuery = TPCore.crud.CrudListQuery<
-  HelloWorld.EntityQueryOrderField,
-  HelloWorld.EntityQueryFilter
-  >;
-
-type ServiceInterface = TPCore.crud.CrudService<
-  HelloWorld.Entity,
-  HelloWorld.ListedEntity,
-  HelloWorld.CreateEntity,
-  HelloWorld.UpdateEntity,
-  HelloWorld.Entity['id']
-  >;
-
-export class Service implements ServiceInterface {
+export class Service implements HelloWorld.EntityCrudService {
   private items: Array<HelloWorld.Entity> = [
     {
       id: '10',
@@ -78,7 +64,7 @@ export class Service implements ServiceInterface {
     throw new Error('No item');
   }
 
-  async findAll(query: ServiceFindAllQuery): Promise<TPCore.crud.CrudListResult<HelloWorld.ListedEntity>> {
+  async findAll(query: HelloWorld.EntityCrudFindAllQuery): Promise<HelloWorld.EntityCrudFindAllResult> {
     const {
       limit = 10,
       offset = 0,

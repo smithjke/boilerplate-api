@@ -1,3 +1,5 @@
+import TPCore from '~/2p-core';
+
 export type Entity = {
   id: string;
   title: string;
@@ -64,21 +66,21 @@ export const UpdateEntitySchema = {
   properties: CreateEntitySchema.properties,
 };
 
-export enum EntityQueryOrderField {
+export enum EntityCrudFindAllQueryOrderField {
   ID = 'id',
   TITLE = 'title',
   AMOUNT = 'amount',
   CREATED_AT = 'createdAt',
 }
 
-export const EntityQueryOrderFieldSchema = {
+export const EntityCrudFindAllQueryOrderFieldSchema = {
   type: 'string',
-  enum: Object.values(EntityQueryOrderField),
+  enum: Object.values(EntityCrudFindAllQueryOrderField),
 };
 
-export type EntityQueryFilter = Partial<Pick<Entity, 'amount'>>;
+export type EntityCrudFindAllQueryFilter = Partial<Pick<Entity, 'amount'>>;
 
-export const EntityQueryFilterSchema = {
+export const EntityCrudFindAllQueryFilterSchema = {
   type: 'object',
   required: ['amount'],
   additionalProperties: false,
@@ -86,3 +88,20 @@ export const EntityQueryFilterSchema = {
     amount: EntitySchema.properties.amount,
   },
 };
+
+export type EntityCrudService = TPCore.crud.CrudService<
+  Entity,
+  ListedEntity,
+  CreateEntity,
+  UpdateEntity,
+  Entity['id'],
+  EntityCrudFindAllQueryOrderField,
+  EntityCrudFindAllQueryFilter
+  >;
+
+export type EntityCrudFindAllQuery = TPCore.crud.CrudListQuery<
+  EntityCrudFindAllQueryOrderField,
+  EntityCrudFindAllQueryFilter
+  >;
+
+export type EntityCrudFindAllResult = TPCore.crud.CrudListResult<ListedEntity>;
