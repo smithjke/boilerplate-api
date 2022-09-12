@@ -33,8 +33,6 @@ export const EntitySchema = {
   },
 };
 
-// CREATE
-
 export type CreateEntity = Omit<Entity, 'id' | 'createdAt' | 'updatedAt'>;
 
 export const CreateEntitySchema = {
@@ -47,8 +45,6 @@ export const CreateEntitySchema = {
   },
 };
 
-// UPDATE
-
 export type UpdateEntity = Partial<CreateEntity>;
 
 export const UpdateEntitySchema = {
@@ -56,8 +52,6 @@ export const UpdateEntitySchema = {
   additionalProperties: false,
   properties: CreateEntitySchema.properties,
 };
-
-// FIND ALL
 
 export type ListedEntity = Omit<Entity, 'createdAt' | 'updatedAt'>;
 
@@ -72,11 +66,9 @@ export const ListedEntitySchema = {
   },
 };
 
-export type EntityCrudFindAllResult = TPCore.crud.CrudListResult<ListedEntity>;
+// FIND ALL
 
-export const EntityCrudFindAllResultSchema = TPCore.crud.makeCrudListResultSchema(ListedEntitySchema);
-
-export enum EntityCrudFindAllQueryOrderField {
+export enum EntityFindAllQueryOrderField {
   ID = 'id',
   TITLE = 'title',
   AMOUNT = 'amount',
@@ -84,45 +76,81 @@ export enum EntityCrudFindAllQueryOrderField {
   UPDATED_AT = 'updatedAt',
 }
 
-export const EntityCrudFindAllQueryOrderFieldSchema = {
-  type: 'string',
-  enum: Object.values(EntityCrudFindAllQueryOrderField),
+export type EntityFindAllQueryFilter = Partial<Pick<Entity, 'amount'>>;
+
+export type EntityFindAll = {
+  request: {
+    query: TPCore.crud.CrudListQuery<
+      EntityFindAllQueryOrderField,
+      EntityFindAllQueryFilter
+      >;
+  };
+  response: TPCore.crud.CrudListResult<ListedEntity>;
 };
 
-export type EntityCrudFindAllQueryFilter = Partial<Pick<Entity, 'amount'>>;
-
-export const EntityCrudFindAllQueryFilterSchema = {
-  type: 'object',
-  required: ['amount'],
-  additionalProperties: false,
-  properties: {
-    amount: EntitySchema.properties.amount,
+export const EntityFindAllSchema = {
+  request: {
+    query: TPCore.crud.makeCrudListQuerySchema(
+      {
+        type: 'string',
+        enum: Object.values(EntityFindAllQueryOrderField),
+      },
+      {
+        type: 'object',
+        required: ['amount'],
+        additionalProperties: false,
+        properties: {
+          amount: EntitySchema.properties.amount,
+        },
+      },
+    ),
   },
+  response: TPCore.crud.makeCrudListResultSchema(ListedEntitySchema),
 };
-
-export type EntityCrudFindAllQuery = TPCore.crud.CrudListQuery<
-  EntityCrudFindAllQueryOrderField,
-  EntityCrudFindAllQueryFilter
-  >;
-
-export const EntityCrudFindAllQuerySchema = TPCore.crud.makeCrudListQuerySchema(
-  EntityCrudFindAllQueryOrderFieldSchema,
-  EntityCrudFindAllQueryFilterSchema,
-);
 
 // FIND ONE
 
-export type EntityCrudFindOneParams = TPCore.api.SingleParams<Entity['id']>;
+export type EntityFindOne = {
+  request: {
+    params: TPCore.api.SingleParams<Entity['id']>;
+  };
+};
 
-export const EntityCrudFindOneParamsSchema = TPCore.api.makeSingleParamsSchema(EntitySchema.properties.id);
+export const EntityFindOneSchema = {
+  request: {
+    params: TPCore.api.makeSingleParamsSchema(EntitySchema.properties.id),
+  },
+};
+
+// DO BARREL ROLL
+
+export type EntityDoBarrelRoll = {
+  request: {
+    params: EntityFindOne['request']['params'];
+    data: UpdateEntity;
+  };
+  response: string;
+};
+
+export const EntityDoBarrelRollSchema = {
+  request: {
+    params: EntityFindOneSchema.request.params,
+    data: UpdateEntitySchema,
+  },
+  response: {
+    type: 'string',
+  },
+};
 
 // SERVICE
 
-export type EntityCrudService = TPCore.crud.CrudService<
+export interface EntityCrudService extends TPCore.crud.CrudService<
   Entity,
   CreateEntity,
   UpdateEntity,
-  Entity['id'],
-  EntityCrudFindAllQuery,
-  EntityCrudFindAllResult
-  >;
+  EntityFindOne['request']['params'],
+  EntityFindAll['request']['query'],
+  EntityFindAll['response']
+  > {
+  doBarrelRoll(request: EntityDoBarrelRoll['request']): Promise<EntityDoBarrelRoll['response']>;
+}

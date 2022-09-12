@@ -1,14 +1,14 @@
 import { FastifyInstance, RouteOptions } from 'fastify';
 import TPCore from '~/2p-core';
 
-export type FindOneRouteProps<ENTITY, CREATE_ENTITY, UPDATE_ENTITY, ID, FA_Q, FA_R> = {
-  crudService: TPCore.crud.CrudService<ENTITY, CREATE_ENTITY, UPDATE_ENTITY, ID, FA_Q, FA_R>;
+export type FindOneRouteProps<ENTITY, CREATE_ENTITY, UPDATE_ENTITY, ONE_PARAMS, ALL_QUERY, ALL_RESULT> = {
+  crudService: TPCore.crud.CrudService<ENTITY, CREATE_ENTITY, UPDATE_ENTITY, ONE_PARAMS, ALL_QUERY, ALL_RESULT>;
   entityCrudFindOneParamsSchema: object;
   entitySchema: object;
 };
 
-export function makeFindOneRoute<ENTITY, CREATE_ENTITY, UPDATE_ENTITY, ID, FA_Q, FA_R>(
-  props: FindOneRouteProps<ENTITY, CREATE_ENTITY, UPDATE_ENTITY, ID, FA_Q, FA_R>,
+export function makeFindOneRoute<ENTITY, CREATE_ENTITY, UPDATE_ENTITY, ONE_PARAMS, ALL_QUERY, ALL_RESULT>(
+  props: FindOneRouteProps<ENTITY, CREATE_ENTITY, UPDATE_ENTITY, ONE_PARAMS, ALL_QUERY, ALL_RESULT>,
 ): RouteOptions {
   return {
     method: 'GET',
@@ -20,25 +20,26 @@ export function makeFindOneRoute<ENTITY, CREATE_ENTITY, UPDATE_ENTITY, ID, FA_Q,
       },
     },
     handler: async (request, reply) => {
-      const { id } = request.params as TPCore.api.SingleParams<ID>;
-      const entity = await props.crudService.findOne(id);
-      if (!entity) {
+      try {
+        return props.crudService.findOne({
+          params: request.params as ONE_PARAMS,
+        });
+      } catch (e) {
         reply.code(404);
-        throw new Error(`No entity with id ${id}`);
+        throw e;
       }
-      return entity;
     },
   };
 }
 
-export type FindAllRouteProps<ENTITY, CREATE_ENTITY, UPDATE_ENTITY, ID, FA_Q, FA_R> = {
-  crudService: TPCore.crud.CrudService<ENTITY, CREATE_ENTITY, UPDATE_ENTITY, ID, FA_Q, FA_R>;
+export type FindAllRouteProps<ENTITY, CREATE_ENTITY, UPDATE_ENTITY, ONE_PARAMS, ALL_QUERY, ALL_RESULT> = {
+  crudService: TPCore.crud.CrudService<ENTITY, CREATE_ENTITY, UPDATE_ENTITY, ONE_PARAMS, ALL_QUERY, ALL_RESULT>;
   entityCrudFindAllQuerySchema: object;
   entityCrudFindAllResultSchema: object;
 };
 
-export function makeFindAllRoute<ENTITY, CREATE_ENTITY, UPDATE_ENTITY, ID, FA_Q, FA_R>(
-  props: FindAllRouteProps<ENTITY, CREATE_ENTITY, UPDATE_ENTITY, ID, FA_Q, FA_R>
+export function makeFindAllRoute<ENTITY, CREATE_ENTITY, UPDATE_ENTITY, ONE_PARAMS, ALL_QUERY, ALL_RESULT>(
+  props: FindAllRouteProps<ENTITY, CREATE_ENTITY, UPDATE_ENTITY, ONE_PARAMS, ALL_QUERY, ALL_RESULT>
 ): RouteOptions {
   return {
     method: 'GET',
@@ -50,19 +51,21 @@ export function makeFindAllRoute<ENTITY, CREATE_ENTITY, UPDATE_ENTITY, ID, FA_Q,
       },
     },
     handler: async (request, reply) => {
-      return props.crudService.findAll(request.query as FA_Q);
+      return props.crudService.findAll({
+        query: request.query as ALL_QUERY,
+      });
     },
   };
 }
 
-export type CreateRouteProps<ENTITY, CREATE_ENTITY, UPDATE_ENTITY, ID, FA_Q, FA_R> = {
-  crudService: TPCore.crud.CrudService<ENTITY, CREATE_ENTITY, UPDATE_ENTITY, ID, FA_Q, FA_R>;
+export type CreateRouteProps<ENTITY, CREATE_ENTITY, UPDATE_ENTITY, ONE_PARAMS, ALL_QUERY, ALL_RESULT> = {
+  crudService: TPCore.crud.CrudService<ENTITY, CREATE_ENTITY, UPDATE_ENTITY, ONE_PARAMS, ALL_QUERY, ALL_RESULT>;
   createEntitySchema: object;
   entitySchema: object;
 };
 
-export function makeCreateRoute<ENTITY, CREATE_ENTITY, UPDATE_ENTITY, ID, FA_Q, FA_R>(
-  props: CreateRouteProps<ENTITY, CREATE_ENTITY, UPDATE_ENTITY, ID, FA_Q, FA_R>
+export function makeCreateRoute<ENTITY, CREATE_ENTITY, UPDATE_ENTITY, ONE_PARAMS, ALL_QUERY, ALL_RESULT>(
+  props: CreateRouteProps<ENTITY, CREATE_ENTITY, UPDATE_ENTITY, ONE_PARAMS, ALL_QUERY, ALL_RESULT>
 ): RouteOptions {
   return {
     method: 'POST',
@@ -74,21 +77,22 @@ export function makeCreateRoute<ENTITY, CREATE_ENTITY, UPDATE_ENTITY, ID, FA_Q, 
       },
     },
     handler: async (request, reply) => {
-      const createData = request.body as CREATE_ENTITY;
-      return props.crudService.create(createData);
+      return props.crudService.create({
+        data: request.body as CREATE_ENTITY,
+      });
     },
   };
 }
 
-export type UpdateRouteProps<ENTITY, CREATE_ENTITY, UPDATE_ENTITY, ID, FA_Q, FA_R> = {
-  crudService: TPCore.crud.CrudService<ENTITY, CREATE_ENTITY, UPDATE_ENTITY, ID, FA_Q, FA_R>;
+export type UpdateRouteProps<ENTITY, CREATE_ENTITY, UPDATE_ENTITY, ONE_PARAMS, ALL_QUERY, ALL_RESULT> = {
+  crudService: TPCore.crud.CrudService<ENTITY, CREATE_ENTITY, UPDATE_ENTITY, ONE_PARAMS, ALL_QUERY, ALL_RESULT>;
   entityCrudFindOneParamsSchema: object;
   updateEntitySchema: object;
   entitySchema: object;
 };
 
-export function makeUpdateRoute<ENTITY, CREATE_ENTITY, UPDATE_ENTITY, ID, FA_Q, FA_R>(
-  props: UpdateRouteProps<ENTITY, CREATE_ENTITY, UPDATE_ENTITY, ID, FA_Q, FA_R>
+export function makeUpdateRoute<ENTITY, CREATE_ENTITY, UPDATE_ENTITY, ONE_PARAMS, ALL_QUERY, ALL_RESULT>(
+  props: UpdateRouteProps<ENTITY, CREATE_ENTITY, UPDATE_ENTITY, ONE_PARAMS, ALL_QUERY, ALL_RESULT>
 ): RouteOptions {
   return {
     method: 'PUT',
@@ -101,20 +105,21 @@ export function makeUpdateRoute<ENTITY, CREATE_ENTITY, UPDATE_ENTITY, ID, FA_Q, 
       },
     },
     handler: async (request, reply) => {
-      const { id } = request.params as TPCore.api.SingleParams<ID>;
-      const updateData = request.body as UPDATE_ENTITY;
-      return props.crudService.update(id, updateData);
+      return props.crudService.update({
+        params: request.params as ONE_PARAMS,
+        data: request.body as UPDATE_ENTITY,
+      });
     },
   };
 }
 
-export type RemoveRouteProps<ENTITY, CREATE_ENTITY, UPDATE_ENTITY, ID, FA_Q, FA_R> = {
-  crudService: TPCore.crud.CrudService<ENTITY, CREATE_ENTITY, UPDATE_ENTITY, ID, FA_Q, FA_R>;
+export type RemoveRouteProps<ENTITY, CREATE_ENTITY, UPDATE_ENTITY, ONE_PARAMS, ALL_QUERY, ALL_RESULT> = {
+  crudService: TPCore.crud.CrudService<ENTITY, CREATE_ENTITY, UPDATE_ENTITY, ONE_PARAMS, ALL_QUERY, ALL_RESULT>;
   entityCrudFindOneParamsSchema: object;
 };
 
-export function makeRemoveRoute<ENTITY, CREATE_ENTITY, UPDATE_ENTITY, ID, FA_Q, FA_R>(
-  props: RemoveRouteProps<ENTITY, CREATE_ENTITY, UPDATE_ENTITY, ID, FA_Q, FA_R>
+export function makeRemoveRoute<ENTITY, CREATE_ENTITY, UPDATE_ENTITY, ONE_PARAMS, ALL_QUERY, ALL_RESULT>(
+  props: RemoveRouteProps<ENTITY, CREATE_ENTITY, UPDATE_ENTITY, ONE_PARAMS, ALL_QUERY, ALL_RESULT>
 ): RouteOptions {
   return {
     method: 'DELETE',
@@ -123,35 +128,36 @@ export function makeRemoveRoute<ENTITY, CREATE_ENTITY, UPDATE_ENTITY, ID, FA_Q, 
       params: props.entityCrudFindOneParamsSchema,
     },
     handler: async (request, reply) => {
-      const { id } = request.params as TPCore.api.SingleParams<ID>;
-      return props.crudService.remove(id);
+      return props.crudService.remove({
+        params: request.params as ONE_PARAMS,
+      });
     },
   };
 }
 
-export type RegisterCrudRoutesProps<ENTITY, CREATE_ENTITY, UPDATE_ENTITY, ID, FA_Q, FA_R> = {
+export type RegisterCrudRoutesProps<ENTITY, CREATE_ENTITY, UPDATE_ENTITY, ONE_PARAMS, ALL_QUERY, ALL_RESULT> = {
   fastifyInstance: FastifyInstance;
-  crudService: TPCore.crud.CrudService<ENTITY, CREATE_ENTITY, UPDATE_ENTITY, ID, FA_Q, FA_R>;
-  entityCrudFindAllQuerySchema: object;
-  entityCrudFindAllResultSchema: object;
-  entityCrudFindOneParamsSchema: object;
+  crudService: TPCore.crud.CrudService<ENTITY, CREATE_ENTITY, UPDATE_ENTITY, ONE_PARAMS, ALL_QUERY, ALL_RESULT>;
   entitySchema: object;
   createEntitySchema: object;
   updateEntitySchema: object;
+  entityCrudFindAllQuerySchema: object;
+  entityCrudFindAllResultSchema: object;
+  entityCrudFindOneParamsSchema: object;
 };
 
-export function registerCrudRoutes<ENTITY, CREATE_ENTITY, UPDATE_ENTITY, ID, FA_Q, FA_R>(
-  props: RegisterCrudRoutesProps<ENTITY, CREATE_ENTITY, UPDATE_ENTITY, ID, FA_Q, FA_R>,
+export function registerCrudRoutes<ENTITY, CREATE_ENTITY, UPDATE_ENTITY, ONE_PARAMS, ALL_QUERY, ALL_RESULT>(
+  props: RegisterCrudRoutesProps<ENTITY, CREATE_ENTITY, UPDATE_ENTITY, ONE_PARAMS, ALL_QUERY, ALL_RESULT>,
 ) {
   const {
     fastifyInstance,
     crudService,
-    entityCrudFindAllQuerySchema,
-    entityCrudFindAllResultSchema,
-    entityCrudFindOneParamsSchema,
     entitySchema,
     createEntitySchema,
     updateEntitySchema,
+    entityCrudFindAllQuerySchema,
+    entityCrudFindAllResultSchema,
+    entityCrudFindOneParamsSchema,
   } = props;
 
   fastifyInstance.route(

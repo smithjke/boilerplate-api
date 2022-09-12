@@ -5,45 +5,53 @@ import * as HelloWorld from './entity';
 export class Client implements HelloWorld.EntityCrudService {
   private baseUrl = '/api/hello-world';
 
-  create(createData: HelloWorld.CreateEntity): Promise<HelloWorld.Entity> {
+  create(request: { data: HelloWorld.CreateEntity }): Promise<HelloWorld.Entity> {
     return axios.request({
       method: 'POST',
       url: '',
       baseURL: this.baseUrl,
-      data: createData,
+      data: request.data,
     });
   }
 
-  update(id: HelloWorld.Entity['id'], updateData: HelloWorld.UpdateEntity): Promise<HelloWorld.Entity> {
+  update(request: { params: HelloWorld.EntityFindOne['request']['params'], data: HelloWorld.UpdateEntity }): Promise<HelloWorld.Entity> {
     return axios.request({
       method: 'PUT',
-      url: `/${id}`,
+      url: `/${request.params.id}`,
       baseURL: this.baseUrl,
-      data: updateData,
+      data: request.data,
     });
   }
 
-  remove(id: HelloWorld.Entity['id']): Promise<void> {
+  remove(request: { params: HelloWorld.EntityFindOne['request']['params'] }): Promise<void> {
     return axios.request({
       method: 'DELETE',
-      url: `/${id}`,
+      url: `/${request.params.id}`,
       baseURL: this.baseUrl,
     });
   }
 
-  findOne(id: HelloWorld.Entity['id']): Promise<HelloWorld.Entity> {
+  findOne(request: { params: HelloWorld.EntityFindOne['request']['params'] }): Promise<HelloWorld.Entity> {
     return axios.request({
       method: 'GET',
-      url: `/${id}`,
+      url: `/${request.params.id}`,
       baseURL: this.baseUrl,
     });
   }
 
-  findAll(query: HelloWorld.EntityCrudFindAllQuery): Promise<HelloWorld.EntityCrudFindAllResult> {
-    const queryString = TPCore.api.makeQueryString(query);
+  findAll(request: { query: HelloWorld.EntityFindAll['request']['query'] }): Promise<HelloWorld.EntityFindAll['response']> {
+    const queryString = TPCore.api.makeQueryString(request.query);
     return axios.request({
       method: 'GET',
       url: `?${queryString}`,
+      baseURL: this.baseUrl,
+    });
+  }
+
+  doBarrelRoll(request: HelloWorld.EntityDoBarrelRoll['request']): Promise<HelloWorld.EntityDoBarrelRoll['response']> {
+    return axios.request({
+      method: 'PUT',
+      url: `/${request.params.id}/do-barrel-roll`,
       baseURL: this.baseUrl,
     });
   }

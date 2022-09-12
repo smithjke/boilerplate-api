@@ -9,12 +9,30 @@ export function plugin(fastifyInstance: FastifyInstance, opts: any, done: () => 
   TPServer.api.registerCrudRoutes({
     fastifyInstance,
     crudService,
-    entityCrudFindAllQuerySchema: HelloWorld.EntityCrudFindAllQuerySchema,
-    entityCrudFindAllResultSchema: HelloWorld.EntityCrudFindAllResultSchema,
-    entityCrudFindOneParamsSchema: HelloWorld.EntityCrudFindOneParamsSchema,
     entitySchema: HelloWorld.EntitySchema,
     createEntitySchema: HelloWorld.CreateEntitySchema,
     updateEntitySchema: HelloWorld.UpdateEntitySchema,
+    entityCrudFindAllQuerySchema: HelloWorld.EntityFindAllSchema.request.query,
+    entityCrudFindAllResultSchema: HelloWorld.EntityFindAllSchema.response,
+    entityCrudFindOneParamsSchema: HelloWorld.EntityFindOneSchema.request.params,
+  });
+
+  fastifyInstance.route({
+    method: 'PUT',
+    url: '/:id/do-barrel-roll',
+    schema: {
+      params: HelloWorld.EntityDoBarrelRollSchema.request.params,
+      body: HelloWorld.EntityDoBarrelRollSchema.request.data,
+      response: {
+        200: HelloWorld.EntityDoBarrelRollSchema.response,
+      },
+    },
+    handler: async (request, reply) => {
+      return crudService.doBarrelRoll({
+        params: request.params as HelloWorld.EntityDoBarrelRoll['request']['params'],
+        data: request.body as HelloWorld.EntityDoBarrelRoll['request']['data'],
+      });
+    },
   });
 
   done();
