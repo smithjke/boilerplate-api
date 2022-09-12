@@ -1,4 +1,5 @@
 import axios from 'axios';
+import TPCore from '~/2p-core';
 import * as HelloWorld from './entity';
 
 export class Client implements HelloWorld.EntityCrudService {
@@ -10,7 +11,7 @@ export class Client implements HelloWorld.EntityCrudService {
       url: '',
       baseURL: this.baseUrl,
       data: createData,
-    })
+    });
   }
 
   update(id: HelloWorld.Entity['id'], updateData: HelloWorld.UpdateEntity): Promise<HelloWorld.Entity> {
@@ -19,7 +20,7 @@ export class Client implements HelloWorld.EntityCrudService {
       url: `/${id}`,
       baseURL: this.baseUrl,
       data: updateData,
-    })
+    });
   }
 
   remove(id: HelloWorld.Entity['id']): Promise<void> {
@@ -27,7 +28,7 @@ export class Client implements HelloWorld.EntityCrudService {
       method: 'DELETE',
       url: `/${id}`,
       baseURL: this.baseUrl,
-    })
+    });
   }
 
   findOne(id: HelloWorld.Entity['id']): Promise<HelloWorld.Entity> {
@@ -35,14 +36,15 @@ export class Client implements HelloWorld.EntityCrudService {
       method: 'GET',
       url: `/${id}`,
       baseURL: this.baseUrl,
-    })
+    });
   }
 
   findAll(query: HelloWorld.EntityCrudFindAllQuery): Promise<HelloWorld.EntityCrudFindAllResult> {
+    const queryString = TPCore.api.makeQueryString(query);
     return axios.request({
       method: 'GET',
-      url: '',
+      url: `?${queryString}`,
       baseURL: this.baseUrl,
-    })
+    });
   }
 }

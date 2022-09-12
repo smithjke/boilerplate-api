@@ -1,6 +1,4 @@
-import { CrudListQuery, CrudListResult } from './crud-list';
-
-export interface CrudService<ENTITY, LISTED_ENTITY, CREATE_ENTITY, UPDATE_ENTITY, ID, OF, F> {
+export interface CrudService<ENTITY, CREATE_ENTITY, UPDATE_ENTITY, ID, FA_Q, FA_R> {
   create(createData: CREATE_ENTITY): Promise<ENTITY>;
 
   update(id: ID, updateData: UPDATE_ENTITY): Promise<ENTITY>;
@@ -9,5 +7,5 @@ export interface CrudService<ENTITY, LISTED_ENTITY, CREATE_ENTITY, UPDATE_ENTITY
 
   findOne(id: ID): Promise<ENTITY>;
 
-  findAll(query: CrudListQuery<OF, F>): Promise<CrudListResult<LISTED_ENTITY>>;
+  findAll(query: FA_Q): Promise<FA_R>;
 }

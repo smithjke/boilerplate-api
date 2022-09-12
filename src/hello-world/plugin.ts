@@ -9,11 +9,10 @@ export function plugin(fastifyInstance: FastifyInstance, opts: any, done: () => 
   TPServer.api.registerCrudRoutes({
     fastifyInstance,
     crudService,
-    entityCrudFindAllQueryOrderFieldSchema: HelloWorld.EntityCrudFindAllQueryOrderFieldSchema,
-    entityCrudFindAllQueryFilterSchema: HelloWorld.EntityCrudFindAllQueryFilterSchema,
-    entityIdSchema: HelloWorld.EntitySchema.properties.id,
+    entityCrudFindAllQuerySchema: HelloWorld.EntityCrudFindAllQuerySchema,
+    entityCrudFindAllResultSchema: HelloWorld.EntityCrudFindAllResultSchema,
+    entityCrudFindOneParamsSchema: HelloWorld.EntityCrudFindOneParamsSchema,
     entitySchema: HelloWorld.EntitySchema,
-    listedEntitySchema: HelloWorld.ListedEntitySchema,
     createEntitySchema: HelloWorld.CreateEntitySchema,
     updateEntitySchema: HelloWorld.UpdateEntitySchema,
   });

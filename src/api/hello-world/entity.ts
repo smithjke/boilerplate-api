@@ -33,18 +33,7 @@ export const EntitySchema = {
   },
 };
 
-export type ListedEntity = Omit<Entity, 'createdAt' | 'updatedAt'>;
-
-export const ListedEntitySchema = {
-  type: 'object',
-  required: ['title', 'amount'],
-  additionalProperties: false,
-  properties: {
-    id: EntitySchema.properties.id,
-    title: EntitySchema.properties.title,
-    amount: EntitySchema.properties.amount,
-  },
-};
+// CREATE
 
 export type CreateEntity = Omit<Entity, 'id' | 'createdAt' | 'updatedAt'>;
 
@@ -58,6 +47,8 @@ export const CreateEntitySchema = {
   },
 };
 
+// UPDATE
+
 export type UpdateEntity = Partial<CreateEntity>;
 
 export const UpdateEntitySchema = {
@@ -66,11 +57,31 @@ export const UpdateEntitySchema = {
   properties: CreateEntitySchema.properties,
 };
 
+// FIND ALL
+
+export type ListedEntity = Omit<Entity, 'createdAt' | 'updatedAt'>;
+
+export const ListedEntitySchema = {
+  type: 'object',
+  required: ['title', 'amount'],
+  additionalProperties: false,
+  properties: {
+    id: EntitySchema.properties.id,
+    title: EntitySchema.properties.title,
+    amount: EntitySchema.properties.amount,
+  },
+};
+
+export type EntityCrudFindAllResult = TPCore.crud.CrudListResult<ListedEntity>;
+
+export const EntityCrudFindAllResultSchema = TPCore.crud.makeCrudListResultSchema(ListedEntitySchema);
+
 export enum EntityCrudFindAllQueryOrderField {
   ID = 'id',
   TITLE = 'title',
   AMOUNT = 'amount',
   CREATED_AT = 'createdAt',
+  UPDATED_AT = 'updatedAt',
 }
 
 export const EntityCrudFindAllQueryOrderFieldSchema = {
@@ -89,19 +100,29 @@ export const EntityCrudFindAllQueryFilterSchema = {
   },
 };
 
-export type EntityCrudService = TPCore.crud.CrudService<
-  Entity,
-  ListedEntity,
-  CreateEntity,
-  UpdateEntity,
-  Entity['id'],
-  EntityCrudFindAllQueryOrderField,
-  EntityCrudFindAllQueryFilter
-  >;
-
 export type EntityCrudFindAllQuery = TPCore.crud.CrudListQuery<
   EntityCrudFindAllQueryOrderField,
   EntityCrudFindAllQueryFilter
   >;
 
-export type EntityCrudFindAllResult = TPCore.crud.CrudListResult<ListedEntity>;
+export const EntityCrudFindAllQuerySchema = TPCore.crud.makeCrudListQuerySchema(
+  EntityCrudFindAllQueryOrderFieldSchema,
+  EntityCrudFindAllQueryFilterSchema,
+);
+
+// FIND ONE
+
+export type EntityCrudFindOneParams = TPCore.api.SingleParams<Entity['id']>;
+
+export const EntityCrudFindOneParamsSchema = TPCore.api.makeSingleParamsSchema(EntitySchema.properties.id);
+
+// SERVICE
+
+export type EntityCrudService = TPCore.crud.CrudService<
+  Entity,
+  CreateEntity,
+  UpdateEntity,
+  Entity['id'],
+  EntityCrudFindAllQuery,
+  EntityCrudFindAllResult
+  >;
