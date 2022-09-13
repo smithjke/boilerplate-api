@@ -12,19 +12,19 @@ export function plugin(fastifyInstance: FastifyInstance, opts: any, done: () => 
     entitySchema: HelloWorld.EntitySchema,
     createEntitySchema: HelloWorld.CreateEntitySchema,
     updateEntitySchema: HelloWorld.UpdateEntitySchema,
-    entityCrudFindAllQuerySchema: HelloWorld.EntityFindAllSchema.request.query,
-    entityCrudFindAllResultSchema: HelloWorld.EntityFindAllSchema.response,
-    entityCrudFindOneParamsSchema: HelloWorld.EntityFindOneSchema.request.params,
+    entityCrudFindAllQuerySchema: HelloWorld.EntityFindAllSchema.properties.request.properties.query,
+    entityCrudFindAllResultSchema: HelloWorld.EntityFindAllSchema.properties.response,
+    entityCrudFindOneParamsSchema: HelloWorld.EntityFindOneSchema.properties.request.params,
   });
 
   fastifyInstance.route({
     method: 'PUT',
     url: '/:id/do-barrel-roll',
     schema: {
-      params: HelloWorld.EntityDoBarrelRollSchema.request.params,
-      body: HelloWorld.EntityDoBarrelRollSchema.request.data,
+      params: HelloWorld.EntityDoBarrelRollSchema.properties.request.properties.params,
+      body: HelloWorld.EntityDoBarrelRollSchema.properties.request.properties.data,
       response: {
-        200: HelloWorld.EntityDoBarrelRollSchema.response,
+        200: HelloWorld.EntityDoBarrelRollSchema.properties.response,
       },
     },
     handler: async (request, reply) => {

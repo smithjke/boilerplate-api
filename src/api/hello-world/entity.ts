@@ -1,70 +1,34 @@
+import { Static, Type } from '@sinclair/typebox';
 import TPCore from '~/2p-core';
 
-export type Entity = {
-  id: string;
-  title: string;
-  amount: number;
-  createdAt: Date;
-  updatedAt: Date;
-};
+export const EntitySchema = Type.Object({
+  id: Type.String(),
+  title: Type.String(),
+  amount: Type.Optional(Type.Number()),
+  createdAt: Type.Integer(),
+  updatedAt: Type.Integer(),
+});
 
-export const EntitySchema = {
-  type: 'object',
-  required: ['id', 'title', 'amount', 'createdAt', 'updatedAt'],
-  additionalProperties: false,
-  properties: {
-    id: {
-      type: 'string',
-    },
-    title: {
-      type: 'string',
-    },
-    amount: {
-      type: 'number',
-    },
-    createdAt: {
-      type: 'number',
-      format: 'date-and-time',
-    },
-    updatedAt: {
-      type: 'number',
-      format: 'date-and-time',
-    },
-  },
-};
+export type Entity = Static<typeof EntitySchema>;
 
-export type CreateEntity = Omit<Entity, 'id' | 'createdAt' | 'updatedAt'>;
+export const CreateEntitySchema = Type.Omit(EntitySchema, [
+  'id',
+  'createdAt',
+  'updatedAt',
+]);
 
-export const CreateEntitySchema = {
-  type: 'object',
-  required: ['title', 'amount'],
-  additionalProperties: false,
-  properties: {
-    title: EntitySchema.properties.title,
-    amount: EntitySchema.properties.amount,
-  },
-};
+export type CreateEntity = Static<typeof CreateEntitySchema>;
 
-export type UpdateEntity = Partial<CreateEntity>;
+export const UpdateEntitySchema = Type.Partial(CreateEntitySchema);
 
-export const UpdateEntitySchema = {
-  type: 'object',
-  additionalProperties: false,
-  properties: CreateEntitySchema.properties,
-};
+export type UpdateEntity = Static<typeof UpdateEntitySchema>;
 
-export type ListedEntity = Omit<Entity, 'createdAt' | 'updatedAt'>;
+export const ListedEntitySchema = Type.Omit(EntitySchema, [
+  'createdAt',
+  'updatedAt',
+]);
 
-export const ListedEntitySchema = {
-  type: 'object',
-  required: ['title', 'amount'],
-  additionalProperties: false,
-  properties: {
-    id: EntitySchema.properties.id,
-    title: EntitySchema.properties.title,
-    amount: EntitySchema.properties.amount,
-  },
-};
+export type ListedEntity = Static<typeof ListedEntitySchema>;
 
 // FIND ALL
 
@@ -76,71 +40,58 @@ export enum EntityFindAllQueryOrderField {
   UPDATED_AT = 'updatedAt',
 }
 
-export type EntityFindAllQueryFilter = Partial<Pick<Entity, 'amount'>>;
+export const EntityFindAllQueryOrderFieldSchema = Type.Enum(EntityFindAllQueryOrderField);
 
-export type EntityFindAll = {
-  request: {
-    query: TPCore.crud.CrudListQuery<
-      EntityFindAllQueryOrderField,
-      EntityFindAllQueryFilter
-      >;
-  };
-  response: TPCore.crud.CrudListResult<ListedEntity>;
-};
+export const EntityFindAllQueryFilterSchema = Type.Partial(Type.Pick(EntitySchema, ['amount']));
 
-export const EntityFindAllSchema = {
-  request: {
-    query: TPCore.crud.makeCrudListQuerySchema(
-      {
-        type: 'string',
-        enum: Object.values(EntityFindAllQueryOrderField),
-      },
-      {
-        type: 'object',
-        required: ['amount'],
-        additionalProperties: false,
-        properties: {
-          amount: EntitySchema.properties.amount,
-        },
-      },
-    ),
-  },
-  response: TPCore.crud.makeCrudListResultSchema(ListedEntitySchema),
-};
+export const EntityFindAllSchema = Type.Object({
+  request: Type.Object({
+    query: Type.Object({
+      limit: Type.Optional(Type.Integer()),
+      offset: Type.Optional(Type.Integer()),
+      order: Type.Optional(Type.Object({
+        field: EntityFindAllQueryOrderFieldSchema,
+        direction: Type.Union([
+          Type.Literal('asc'),
+          Type.Literal('desc'),
+        ]),
+      })),
+      filter: Type.Optional(EntityFindAllQueryFilterSchema),
+    }),
+  }),
+  response: Type.Object({
+    list: Type.Array(ListedEntitySchema),
+    total: Type.Integer(),
+  }),
+});
+
+export type EntityFindAll = Static<typeof EntityFindAllSchema>;
 
 // FIND ONE
 
-export type EntityFindOne = {
-  request: {
-    params: TPCore.api.SingleParams<Entity['id']>;
-  };
-};
+export const EntityFindOneSchema = Type.Object({
+  request: Type.Object({
+    params: Type.Object({
+      id: EntitySchema.properties.id,
+    }),
+  }),
+});
 
-export const EntityFindOneSchema = {
-  request: {
-    params: TPCore.api.makeSingleParamsSchema(EntitySchema.properties.id),
-  },
-};
+export type EntityFindOne = Static<typeof EntityFindOneSchema>;
 
 // DO BARREL ROLL
 
-export type EntityDoBarrelRoll = {
-  request: {
-    params: EntityFindOne['request']['params'];
-    data: UpdateEntity;
-  };
-  response: string;
-};
-
-export const EntityDoBarrelRollSchema = {
-  request: {
-    params: EntityFindOneSchema.request.params,
+export const EntityDoBarrelRollSchema = Type.Object({
+  request: Type.Object({
+    params: EntityFindOneSchema.properties.request.properties.params,
     data: UpdateEntitySchema,
-  },
-  response: {
-    type: 'string',
-  },
-};
+  }),
+  response: Type.Object({
+    data: Type.String(),
+  }),
+});
+
+export type EntityDoBarrelRoll = Static<typeof EntityDoBarrelRollSchema>;
 
 // SERVICE
 

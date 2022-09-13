@@ -2,7 +2,7 @@ import axios from 'axios';
 import TPCore from '~/2p-core';
 import * as HelloWorld from './entity';
 
-export class Client implements HelloWorld.EntityCrudService {
+export class Client extends TPCore.api.CrudClient implements HelloWorld.EntityCrudService {
   private baseUrl = '/api/hello-world';
 
   create(request: { data: HelloWorld.CreateEntity }): Promise<HelloWorld.Entity> {

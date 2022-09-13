@@ -25,6 +25,7 @@
     "typescript": "^4.7.2"
   },
   "dependencies": {
+    "@sinclair/typebox": "^0.24.41",
     "ajv": "^8.11.0",
     "axios": "^0.27.2",
     "crypto-js": "^4.1.1",

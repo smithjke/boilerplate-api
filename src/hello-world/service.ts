@@ -1,6 +1,6 @@
 import { HelloWorld } from '~/api';
 
-const firstDate = new Date();
+const currentDate = Date.now();
 
 export class Service implements HelloWorld.EntityCrudService {
   private items: Array<HelloWorld.Entity> = [
@@ -8,20 +8,20 @@ export class Service implements HelloWorld.EntityCrudService {
       id: '10',
       title: 'Lol',
       amount: 5,
-      createdAt: firstDate,
-      updatedAt: firstDate,
+      createdAt: currentDate - 1000,
+      updatedAt: currentDate - 1000,
     },
     {
       id: '11',
       title: 'Kek',
       amount: 7,
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      createdAt: currentDate,
+      updatedAt: currentDate,
     },
   ];
 
   async create(request: { data: HelloWorld.CreateEntity }): Promise<HelloWorld.Entity> {
-    const date = new Date;
+    const date = Date.now();
     const item = {
       id: String(Math.round(Math.random() * 1000)),
       ...request.data,
@@ -38,7 +38,7 @@ export class Service implements HelloWorld.EntityCrudService {
         this.items[i] = {
           ...this.items[i],
           ...request.data,
-          updatedAt: new Date(),
+          updatedAt: Date.now(),
         };
         return this.items[i];
       }
@@ -86,6 +86,8 @@ export class Service implements HelloWorld.EntityCrudService {
 
   async doBarrelRoll(request: HelloWorld.EntityDoBarrelRoll['request']): Promise<HelloWorld.EntityDoBarrelRoll['response']> {
     console.log('doBarrelRoll.request >>>', request);
-    return `Do Barrel Roll: ${request.params.id}`;
+    return {
+      data: `Do Barrel Roll: ${request.params.id}`,
+    };
   }
 }
