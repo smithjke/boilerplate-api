@@ -1,27 +1,28 @@
+import { Static, TSchema } from '@sinclair/typebox';
 import { CrudService } from '../crud';
 
-export class CrudClient<
-  ENTITY, CREATE_ENTITY, UPDATE_ENTITY, ONE_PARAMS, ALL_QUERY, ALL_RESPONSE
-  > implements CrudService<
-  ENTITY, CREATE_ENTITY, UPDATE_ENTITY, ONE_PARAMS, ALL_QUERY, ALL_RESPONSE
-  > {
-  create(request: { data: CREATE_ENTITY }): Promise<ENTITY> {
+export abstract class CrudClient implements CrudService<any, any, any, any, any, any> {
+  create(request: any): Promise<any> {
     return Promise.resolve(undefined);
   }
 
-  findAll(request: { query: ALL_QUERY }): Promise<ALL_RESPONSE> {
+  findAll(request: { query: any }): Promise<any> {
     return Promise.resolve(undefined);
   }
 
-  findOne(request: { params: ONE_PARAMS }): Promise<ENTITY> {
+  findOne(request: { params: any }): Promise<any> {
     return Promise.resolve(undefined);
   }
 
-  remove(request: { params: ONE_PARAMS }): Promise<void> {
+  remove(request: { params: any }): Promise<void> {
     return Promise.resolve(undefined);
   }
 
-  update(request: { params: ONE_PARAMS; data: UPDATE_ENTITY }): Promise<ENTITY> {
+  update(request: { params: any; data: any }): Promise<any> {
     return Promise.resolve(undefined);
   }
+}
+
+export function createCrudClient<T extends TSchema>(crud: T): Static<typeof crud> {
+  throw new Error('lol');
 }

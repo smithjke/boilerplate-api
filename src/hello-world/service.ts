@@ -2,7 +2,7 @@ import { HelloWorld } from '~/api';
 
 const currentDate = Date.now();
 
-export class Service implements HelloWorld.EntityCrudService {
+export class Service implements HelloWorld.Service {
   private items: Array<HelloWorld.Entity> = [
     {
       id: '10',
@@ -14,7 +14,7 @@ export class Service implements HelloWorld.EntityCrudService {
     {
       id: '11',
       title: 'Kek',
-      amount: 7,
+      amount: 3,
       createdAt: currentDate,
       updatedAt: currentDate,
     },
@@ -32,7 +32,7 @@ export class Service implements HelloWorld.EntityCrudService {
     return item;
   }
 
-  async update(request: { params: HelloWorld.EntityFindOne['request']['params'], data: HelloWorld.UpdateEntity }): Promise<HelloWorld.Entity> {
+  async update(request: { params: Parameters<HelloWorld.Crud['findOne']>[0]['params'], data: HelloWorld.UpdateEntity }): Promise<HelloWorld.Entity> {
     for (let i = 0; i < this.items.length; i++) {
       if (this.items[i].id === request.params.id) {
         this.items[i] = {
@@ -46,7 +46,7 @@ export class Service implements HelloWorld.EntityCrudService {
     throw new Error('No item');
   }
 
-  async remove(request: { params: HelloWorld.EntityFindOne['request']['params'] }): Promise<void> {
+  async remove(request: { params: Parameters<HelloWorld.Crud['findOne']>[0]['params'] }): Promise<void> {
     for (let i = 0; i < this.items.length; i++) {
       if (this.items[i].id === request.params.id) {
         this.items.splice(i, 1);
@@ -56,7 +56,7 @@ export class Service implements HelloWorld.EntityCrudService {
     throw new Error('No item');
   }
 
-  async findOne(request: { params: HelloWorld.EntityFindOne['request']['params'] }): Promise<HelloWorld.Entity> {
+  async findOne(request: { params: Parameters<HelloWorld.Crud['findOne']>[0]['params'] }): Promise<Awaited<ReturnType<HelloWorld.Crud['findOne']>>> {
     const item = await this.items.find((item) => item.id === request.params.id);
     if (item) {
       return item;
@@ -64,15 +64,32 @@ export class Service implements HelloWorld.EntityCrudService {
     throw new Error('No item');
   }
 
-  async findAll(request: { query: HelloWorld.EntityFindAll['request']['query'] }): Promise<HelloWorld.EntityFindAll['response']> {
+  async findAll(request: { query: Parameters<HelloWorld.Crud['findAll']>[0]['query'] }): Promise<Awaited<ReturnType<HelloWorld.Crud['findAll']>>> {
     const {
       limit = 10,
       offset = 0,
       order = { field: 'id', direction: 'asc' },
-      filter = {},
+      filter,
     } = request.query;
     const list = this.items
-      .filter(Boolean)
+      .filter((item) => {
+        console.log('filter >>>', filter);
+        if (filter?.amount) {
+          if (typeof filter.amount === 'number') {
+            return item.amount === filter.amount;
+          } else if (typeof filter.amount === 'object') {
+            const { lt, gt } = filter.amount as any;
+            if (lt) {
+              return item.amount < lt;
+            }
+            if (gt) {
+              return item.amount > gt;
+            }
+          }
+          return false;
+        }
+        return true;
+      })
       .sort((a, b) => {
         return order.direction === 'asc'
           ? Number(a[order.field]) - Number(b[order.field])
@@ -84,7 +101,7 @@ export class Service implements HelloWorld.EntityCrudService {
     };
   }
 
-  async doBarrelRoll(request: HelloWorld.EntityDoBarrelRoll['request']): Promise<HelloWorld.EntityDoBarrelRoll['response']> {
+  async doBarrelRoll(request: HelloWorld.DoBarrelRollRequest): Promise<HelloWorld.DoBarrelRollResponse> {
     console.log('doBarrelRoll.request >>>', request);
     return {
       data: `Do Barrel Roll: ${request.params.id}`,

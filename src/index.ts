@@ -1,4 +1,5 @@
 import express from 'express';
+import qs from 'qs';
 import Fastify, { FastifyInstance, RouteShorthandOptions } from 'fastify';
 import { Server, IncomingMessage, ServerResponse } from 'http';
 import { useMongoService } from '~/1st-server-mongo';
@@ -9,7 +10,9 @@ import { apiPlugin } from '~/api.plugin';
 
 registerDependencies();
 
-const fastify: FastifyInstance = Fastify({});
+const fastify: FastifyInstance = Fastify({
+  querystringParser: (str) => qs.parse(str),
+});
 
 fastify.register(apiPlugin, { prefix: '/api' });
 

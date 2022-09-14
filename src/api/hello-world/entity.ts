@@ -1,38 +1,68 @@
 import { Static, Type } from '@sinclair/typebox';
 import TPCore from '~/2p-core';
 
-export const EntitySchema = Type.Object({
+// ENTITY
+
+export const entity = Type.Object({
   id: Type.String(),
   title: Type.String(),
-  amount: Type.Optional(Type.Number()),
+  amount: Type.Number(),
   createdAt: Type.Integer(),
   updatedAt: Type.Integer(),
 });
 
-export type Entity = Static<typeof EntitySchema>;
+export type Entity = Static<typeof entity>;
 
-export const CreateEntitySchema = Type.Omit(EntitySchema, [
+// CREATE ENTITY
+
+export const createEntity = Type.Omit(entity, [
   'id',
   'createdAt',
   'updatedAt',
 ]);
 
-export type CreateEntity = Static<typeof CreateEntitySchema>;
+export type CreateEntity = Static<typeof createEntity>;
 
-export const UpdateEntitySchema = Type.Partial(CreateEntitySchema);
+// UPDATE ENTITY
 
-export type UpdateEntity = Static<typeof UpdateEntitySchema>;
+export const updateEntity = Type.Partial(createEntity);
 
-export const ListedEntitySchema = Type.Omit(EntitySchema, [
+export type UpdateEntity = Static<typeof updateEntity>;
+
+// LISTED ENTITY
+
+export const listedEntity = Type.Omit(entity, [
   'createdAt',
   'updatedAt',
 ]);
 
-export type ListedEntity = Static<typeof ListedEntitySchema>;
+export type ListedEntity = Static<typeof listedEntity>;
 
-// FIND ALL
+// ENTITY KEY
 
-export enum EntityFindAllQueryOrderField {
+export const entityKey = Type.Pick(entity, ['id']);
+
+export type EntityKey = Static<typeof entityKey>;
+
+// ENTITY FILTER
+
+export const entityFilter = Type.Object({
+  amount: Type.Optional(Type.Union([
+    Type.Number(),
+    Type.Object({
+      lt: Type.Number(),
+    }),
+    Type.Object({
+      gt: Type.Number(),
+    }),
+  ])),
+});
+
+export type EntityFilter = Static<typeof entityFilter>;
+
+// ENTITY ORDER FIELD
+
+export enum EntityOrderField {
   ID = 'id',
   TITLE = 'title',
   AMOUNT = 'amount',
@@ -40,68 +70,48 @@ export enum EntityFindAllQueryOrderField {
   UPDATED_AT = 'updatedAt',
 }
 
-export const EntityFindAllQueryOrderFieldSchema = Type.Enum(EntityFindAllQueryOrderField);
-
-export const EntityFindAllQueryFilterSchema = Type.Partial(Type.Pick(EntitySchema, ['amount']));
-
-export const EntityFindAllSchema = Type.Object({
-  request: Type.Object({
-    query: Type.Object({
-      limit: Type.Optional(Type.Integer()),
-      offset: Type.Optional(Type.Integer()),
-      order: Type.Optional(Type.Object({
-        field: EntityFindAllQueryOrderFieldSchema,
-        direction: Type.Union([
-          Type.Literal('asc'),
-          Type.Literal('desc'),
-        ]),
-      })),
-      filter: Type.Optional(EntityFindAllQueryFilterSchema),
-    }),
-  }),
-  response: Type.Object({
-    list: Type.Array(ListedEntitySchema),
-    total: Type.Integer(),
-  }),
-});
-
-export type EntityFindAll = Static<typeof EntityFindAllSchema>;
-
-// FIND ONE
-
-export const EntityFindOneSchema = Type.Object({
-  request: Type.Object({
-    params: Type.Object({
-      id: EntitySchema.properties.id,
-    }),
-  }),
-});
-
-export type EntityFindOne = Static<typeof EntityFindOneSchema>;
+export const entityOrderField = Type.Enum(EntityOrderField);
 
 // DO BARREL ROLL
 
-export const EntityDoBarrelRollSchema = Type.Object({
-  request: Type.Object({
-    params: EntityFindOneSchema.properties.request.properties.params,
-    data: UpdateEntitySchema,
-  }),
-  response: Type.Object({
-    data: Type.String(),
-  }),
+export const doBarrelRollRequest = Type.Object({
+  params: entityKey,
+  data: updateEntity,
 });
 
-export type EntityDoBarrelRoll = Static<typeof EntityDoBarrelRollSchema>;
+export const doBarrelRollResponse = Type.Object({
+  data: Type.String(),
+});
+
+export const doBarrelRoll = TPCore.crud.Method(doBarrelRollRequest, doBarrelRollResponse,);
+
+export type DoBarrelRollRequest = Static<typeof doBarrelRollRequest>;
+
+export type DoBarrelRollResponse = Static<typeof doBarrelRollResponse>;
+
+export type DoBarrelRoll = Static<typeof doBarrelRoll>;
+
+// CRUD
+
+export const crud = TPCore.crud.Crud({
+  entity,
+  createEntity,
+  updateEntity,
+  listedEntity,
+  entityKey,
+  entityOrderField,
+  entityFilter,
+});
+
+export type Crud = Static<typeof crud>;
 
 // SERVICE
 
-export interface EntityCrudService extends TPCore.crud.CrudService<
-  Entity,
-  CreateEntity,
-  UpdateEntity,
-  EntityFindOne['request']['params'],
-  EntityFindAll['request']['query'],
-  EntityFindAll['response']
-  > {
-  doBarrelRoll(request: EntityDoBarrelRoll['request']): Promise<EntityDoBarrelRoll['response']>;
-}
+export const service = Type.Intersect([
+  crud,
+  Type.Object({
+    doBarrelRoll,
+  }),
+]);
+
+export type Service = Static<typeof service>;
