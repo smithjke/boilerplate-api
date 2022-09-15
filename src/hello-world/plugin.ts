@@ -18,8 +18,7 @@ export function plugin(fastifyInstance: FastifyInstance, opts: any, done: () => 
   });
 
   fastifyInstance.route({
-    method: 'PUT',
-    url: '/:id/do-barrel-roll',
+    ...HelloWorld.requestConfig.doBarrelRoll,
     schema: {
       params: HelloWorld.doBarrelRollRequest.properties.params,
       body: HelloWorld.doBarrelRollRequest.properties.data,

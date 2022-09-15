@@ -32,7 +32,7 @@ export class Service implements HelloWorld.Service {
     return item;
   }
 
-  async update(request: { params: Parameters<HelloWorld.Crud['findOne']>[0]['params'], data: HelloWorld.UpdateEntity }): Promise<HelloWorld.Entity> {
+  async update(request: { params: Parameters<HelloWorld.Service['findOne']>[0]['params'], data: HelloWorld.UpdateEntity }): Promise<HelloWorld.Entity> {
     for (let i = 0; i < this.items.length; i++) {
       if (this.items[i].id === request.params.id) {
         this.items[i] = {
@@ -46,7 +46,7 @@ export class Service implements HelloWorld.Service {
     throw new Error('No item');
   }
 
-  async remove(request: { params: Parameters<HelloWorld.Crud['findOne']>[0]['params'] }): Promise<void> {
+  async remove(request: { params: Parameters<HelloWorld.Service['findOne']>[0]['params'] }): Promise<void> {
     for (let i = 0; i < this.items.length; i++) {
       if (this.items[i].id === request.params.id) {
         this.items.splice(i, 1);
@@ -56,7 +56,7 @@ export class Service implements HelloWorld.Service {
     throw new Error('No item');
   }
 
-  async findOne(request: { params: Parameters<HelloWorld.Crud['findOne']>[0]['params'] }): Promise<Awaited<ReturnType<HelloWorld.Crud['findOne']>>> {
+  async findOne(request: { params: Parameters<HelloWorld.Service['findOne']>[0]['params'] }): Promise<Awaited<ReturnType<HelloWorld.Service['findOne']>>> {
     const item = await this.items.find((item) => item.id === request.params.id);
     if (item) {
       return item;
@@ -64,7 +64,7 @@ export class Service implements HelloWorld.Service {
     throw new Error('No item');
   }
 
-  async findAll(request: { query: Parameters<HelloWorld.Crud['findAll']>[0]['query'] }): Promise<Awaited<ReturnType<HelloWorld.Crud['findAll']>>> {
+  async findAll(request: { query: Parameters<HelloWorld.Service['findAll']>[0]['query'] }): Promise<Awaited<ReturnType<HelloWorld.Service['findAll']>>> {
     const {
       limit = 10,
       offset = 0,
