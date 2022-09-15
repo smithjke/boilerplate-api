@@ -25,8 +25,6 @@ export const doBarrelRollResponse = Type.Object({
   data: Type.String(),
 });
 
-export const doBarrelRoll = TPCore.crud.Method(doBarrelRollRequest, doBarrelRollResponse);
-
 export type DoBarrelRollRequest = Static<typeof doBarrelRollRequest>;
 
 export type DoBarrelRollResponse = Static<typeof doBarrelRollResponse>;

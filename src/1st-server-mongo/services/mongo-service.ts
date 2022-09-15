@@ -12,7 +12,7 @@ export class MongoService {
     };
 
     return new Promise((resolve, reject) => {
-      mongoose.connect(MONGO_CONNECTION, connectOptions, (mongoConnectError) => {
+      mongoose.connect(MONGO_CONNECTION as string, connectOptions, (mongoConnectError) => {
         if (mongoConnectError) {
           reject(mongoConnectError);
           return;

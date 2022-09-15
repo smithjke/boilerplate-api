@@ -11,8 +11,9 @@ export function makeFindOneRoute<ENTITY, CREATE_ENTITY, UPDATE_ENTITY, ONE_PARAM
   props: FindOneRouteProps<ENTITY, CREATE_ENTITY, UPDATE_ENTITY, ONE_PARAMS, ALL_QUERY, ALL_RESULT>,
 ): RouteOptions {
   return {
-    method: 'GET',
-    url: '/:id',
+    ...TPCore.crud.requestConfig.findOne,
+    // method: 'GET',
+    // url: '/:id',
     schema: {
       params: props.entityCrudFindOneParamsSchema,
       response: {
@@ -42,8 +43,9 @@ export function makeFindAllRoute<ENTITY, CREATE_ENTITY, UPDATE_ENTITY, ONE_PARAM
   props: FindAllRouteProps<ENTITY, CREATE_ENTITY, UPDATE_ENTITY, ONE_PARAMS, ALL_QUERY, ALL_RESULT>
 ): RouteOptions {
   return {
-    method: 'GET',
-    url: '',
+    ...TPCore.crud.requestConfig.findAll,
+    // method: 'GET',
+    // url: '',
     schema: {
       querystring: props.entityCrudFindAllQuerySchema,
       response: {
@@ -68,8 +70,9 @@ export function makeCreateRoute<ENTITY, CREATE_ENTITY, UPDATE_ENTITY, ONE_PARAMS
   props: CreateRouteProps<ENTITY, CREATE_ENTITY, UPDATE_ENTITY, ONE_PARAMS, ALL_QUERY, ALL_RESULT>
 ): RouteOptions {
   return {
-    method: 'POST',
-    url: '',
+    ...TPCore.crud.requestConfig.create,
+    // method: 'POST',
+    // url: '',
     schema: {
       body: props.createEntitySchema,
       response: {
@@ -95,8 +98,9 @@ export function makeUpdateRoute<ENTITY, CREATE_ENTITY, UPDATE_ENTITY, ONE_PARAMS
   props: UpdateRouteProps<ENTITY, CREATE_ENTITY, UPDATE_ENTITY, ONE_PARAMS, ALL_QUERY, ALL_RESULT>
 ): RouteOptions {
   return {
-    method: 'PUT',
-    url: '/:id',
+    ...TPCore.crud.requestConfig.update,
+    // method: 'PUT',
+    // url: '/:id',
     schema: {
       params: props.entityCrudFindOneParamsSchema,
       body: props.updateEntitySchema,
@@ -122,8 +126,9 @@ export function makeRemoveRoute<ENTITY, CREATE_ENTITY, UPDATE_ENTITY, ONE_PARAMS
   props: RemoveRouteProps<ENTITY, CREATE_ENTITY, UPDATE_ENTITY, ONE_PARAMS, ALL_QUERY, ALL_RESULT>
 ): RouteOptions {
   return {
-    method: 'DELETE',
-    url: '/:id',
+    ...TPCore.crud.requestConfig.remove,
+    // method: 'DELETE',
+    // url: '/:id',
     schema: {
       params: props.entityCrudFindOneParamsSchema,
     },
