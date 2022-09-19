@@ -1,9 +1,0 @@
-export enum Permission {
-  ROOT = 'ROOT',
-  ROLE__READ = 'ROLE__READ',
-  ROLE__WRITE = 'ROLE__WRITE',
-  SESSION__READ = 'SESSION__READ',
-  SESSION__WRITE = 'SESSION__WRITE',
-  USER__READ = 'USER__READ',
-  USER__WRITE = 'USER__WRITE',
-}

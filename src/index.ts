@@ -1,11 +1,7 @@
-import express from 'express';
+import Fastify, { FastifyInstance } from 'fastify';
 import qs from 'qs';
-import Fastify, { FastifyInstance, RouteShorthandOptions } from 'fastify';
-import { Server, IncomingMessage, ServerResponse } from 'http';
-import { useMongoService } from '~/1st-server-mongo';
 import { config } from '~/config';
 import { registerDependencies } from '~/dependencies';
-import { jsonRpcMiddleware, restMiddleware, useUserService } from '~/app';
 import { apiPlugin } from '~/api.plugin';
 
 registerDependencies();
@@ -16,14 +12,8 @@ const fastify: FastifyInstance = Fastify({
 
 fastify.register(apiPlugin, { prefix: '/api' });
 
-const app = express();
-
-app.use(express.json({ type: '*/*' }));
-app.use('/json-rpc', jsonRpcMiddleware());
-app.use('/api', restMiddleware());
-
-const mongoService = useMongoService();
-const userService = useUserService();
+// const mongoService = useMongoService();
+// const userService = useUserService();
 
 async function start(): Promise<void> {
   // await mongoService.connect();

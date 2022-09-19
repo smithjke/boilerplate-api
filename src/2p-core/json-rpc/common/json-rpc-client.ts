@@ -1,6 +1,6 @@
 import { makeJsonRpcRequest } from '../utils';
 import { JsonRpcError } from './json-rpc-error';
-import { JsonRpcResponse } from '~/1st-json-rpc';
+import { JsonRpcResponse } from './json-rpc-response';
 
 export type CallOptions<PARAMS, RESULT> = {
   params?: PARAMS;
@@ -9,7 +9,7 @@ export type CallOptions<PARAMS, RESULT> = {
 };
 
 export class JsonRpcClient {
-  protected readonly url: string;
+  protected readonly url = '';
 
   protected readonly addMethodToUrl?: boolean;
 
