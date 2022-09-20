@@ -3,6 +3,16 @@ import { TypeCheck, TypeCompiler } from '@sinclair/typebox/compiler';
 import { ApiConfig, AxiosService } from '../api';
 import { CrudListQuery, CrudListResult, makeCrudListResultSchema } from './crud-list';
 
+export type CrudSchema = {
+  entity: TSchema;
+  createEntity: TSchema;
+  updateEntity: TSchema;
+  listedEntity: TSchema;
+  entityKey: TSchema;
+  entityFilter: TSchema;
+  entityOrderField: TSchema;
+};
+
 export interface CrudService<E, C_E, U_E, L_E, K extends object, OF, F> {
   create: (data: C_E) => Promise<E>;
   update: (data: U_E, params: K) => Promise<E>;

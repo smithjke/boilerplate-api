@@ -1,4 +1,5 @@
 import { Static, Type } from '@sinclair/typebox';
+import TPCore from '~/2p-core';
 
 export const entity = Type.Object({
   id: Type.String(),
@@ -55,3 +56,13 @@ export type UpdateEntity = Static<typeof updateEntity>;
 export type ListedEntity = Static<typeof listedEntity>;
 export type EntityKey = Static<typeof entityKey>;
 export type EntityFilter = Static<typeof entityFilter>;
+
+export const crudSchema: TPCore.crud.CrudSchema = {
+  entity,
+  createEntity,
+  updateEntity,
+  listedEntity,
+  entityKey,
+  entityFilter,
+  entityOrderField,
+};

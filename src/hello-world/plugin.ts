@@ -1,21 +1,16 @@
 import { FastifyInstance } from 'fastify';
-import TPCore from '~/2p-core';
 import TPServer from '~/2p-server';
 import { HelloWorld } from '~/api';
 import { useHelloWorldService } from './di';
 
 export function plugin(fastifyInstance: FastifyInstance, opts: any, done: () => void) {
   const crudService = useHelloWorldService();
+  const { crudSchema } = HelloWorld;
 
   TPServer.api.registerCrudRoutes({
     fastifyInstance,
     crudService,
-    entitySchema: HelloWorld.entity,
-    createEntitySchema: HelloWorld.createEntity,
-    updateEntitySchema: HelloWorld.updateEntity,
-    entityCrudFindAllQuerySchema: TPCore.crud.makeCrudListQuerySchema(HelloWorld.entityOrderField, HelloWorld.entityFilter),
-    entityCrudFindAllResultSchema: TPCore.crud.makeCrudListResultSchema(HelloWorld.listedEntity),
-    entityCrudFindOneParamsSchema: HelloWorld.entityKey,
+    crudSchema,
   });
 
   fastifyInstance.route({

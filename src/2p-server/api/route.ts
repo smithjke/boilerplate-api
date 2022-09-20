@@ -3,8 +3,7 @@ import TPCore from '~/2p-core';
 
 export type FindOneRouteProps<E, C_E, U_E, L_E, K extends object, OF, F> = {
   crudService: TPCore.crud.CrudService<E, C_E, U_E, L_E, K, OF, F>;
-  entityCrudFindOneParamsSchema: object;
-  entitySchema: object;
+  crudSchema: TPCore.crud.CrudSchema;
 };
 
 export function makeFindOneRoute<E, C_E, U_E, L_E, K extends object, OF, F>(
@@ -14,9 +13,9 @@ export function makeFindOneRoute<E, C_E, U_E, L_E, K extends object, OF, F>(
     method: TPCore.crud.crudApiConfig.findOne.method as any,
     url: TPCore.crud.crudApiConfig.findOne.url,
     schema: {
-      params: props.entityCrudFindOneParamsSchema,
+      params: props.crudSchema.entityKey,
       response: {
-        200: props.entitySchema,
+        200: props.crudSchema.entity,
       },
     },
     handler: async (request, reply) => {
@@ -32,8 +31,7 @@ export function makeFindOneRoute<E, C_E, U_E, L_E, K extends object, OF, F>(
 
 export type FindAllRouteProps<E, C_E, U_E, L_E, K extends object, OF, F> = {
   crudService: TPCore.crud.CrudService<E, C_E, U_E, L_E, K, OF, F>;
-  entityCrudFindAllQuerySchema: object;
-  entityCrudFindAllResultSchema: object;
+  crudSchema: TPCore.crud.CrudSchema;
 };
 
 export function makeFindAllRoute<E, C_E, U_E, L_E, K extends object, OF, F>(
@@ -43,9 +41,12 @@ export function makeFindAllRoute<E, C_E, U_E, L_E, K extends object, OF, F>(
     method: TPCore.crud.crudApiConfig.findAll.method as any,
     url: TPCore.crud.crudApiConfig.findAll.url,
     schema: {
-      querystring: props.entityCrudFindAllQuerySchema,
+      querystring: TPCore.crud.makeCrudListQuerySchema(
+        props.crudSchema.entityOrderField,
+        props.crudSchema.entityFilter,
+        ),
       response: {
-        200: props.entityCrudFindAllResultSchema,
+        200: TPCore.crud.makeCrudListResultSchema(props.crudSchema.listedEntity),
       },
     },
     handler: async (request, reply) => {
@@ -56,8 +57,7 @@ export function makeFindAllRoute<E, C_E, U_E, L_E, K extends object, OF, F>(
 
 export type CreateRouteProps<E, C_E, U_E, L_E, K extends object, OF, F> = {
   crudService: TPCore.crud.CrudService<E, C_E, U_E, L_E, K, OF, F>;
-  createEntitySchema: object;
-  entitySchema: object;
+  crudSchema: TPCore.crud.CrudSchema;
 };
 
 export function makeCreateRoute<E, C_E, U_E, L_E, K extends object, OF, F>(
@@ -67,9 +67,9 @@ export function makeCreateRoute<E, C_E, U_E, L_E, K extends object, OF, F>(
     method: TPCore.crud.crudApiConfig.create.method as any,
     url: TPCore.crud.crudApiConfig.create.url,
     schema: {
-      body: props.createEntitySchema,
+      body: props.crudSchema.createEntity,
       response: {
-        200: props.entitySchema,
+        200: props.crudSchema.entity,
       },
     },
     handler: async (request, reply) => {
@@ -80,9 +80,7 @@ export function makeCreateRoute<E, C_E, U_E, L_E, K extends object, OF, F>(
 
 export type UpdateRouteProps<E, C_E, U_E, L_E, K extends object, OF, F> = {
   crudService: TPCore.crud.CrudService<E, C_E, U_E, L_E, K, OF, F>;
-  entityCrudFindOneParamsSchema: object;
-  updateEntitySchema: object;
-  entitySchema: object;
+  crudSchema: TPCore.crud.CrudSchema;
 };
 
 export function makeUpdateRoute<E, C_E, U_E, L_E, K extends object, OF, F>(
@@ -92,10 +90,10 @@ export function makeUpdateRoute<E, C_E, U_E, L_E, K extends object, OF, F>(
     method: TPCore.crud.crudApiConfig.update.method as any,
     url: TPCore.crud.crudApiConfig.update.url,
     schema: {
-      params: props.entityCrudFindOneParamsSchema,
-      body: props.updateEntitySchema,
+      params: props.crudSchema.entityKey,
+      body: props.crudSchema.updateEntity,
       response: {
-        200: props.entitySchema,
+        200: props.crudSchema.entity,
       },
     },
     handler: async (request, reply) => {
@@ -109,7 +107,7 @@ export function makeUpdateRoute<E, C_E, U_E, L_E, K extends object, OF, F>(
 
 export type RemoveRouteProps<E, C_E, U_E, L_E, K extends object, OF, F> = {
   crudService: TPCore.crud.CrudService<E, C_E, U_E, L_E, K, OF, F>;
-  entityCrudFindOneParamsSchema: object;
+  crudSchema: TPCore.crud.CrudSchema;
 };
 
 export function makeRemoveRoute<E, C_E, U_E, L_E, K extends object, OF, F>(
@@ -119,7 +117,7 @@ export function makeRemoveRoute<E, C_E, U_E, L_E, K extends object, OF, F>(
     method: TPCore.crud.crudApiConfig.remove.method as any,
     url: TPCore.crud.crudApiConfig.remove.url,
     schema: {
-      params: props.entityCrudFindOneParamsSchema,
+      params: props.crudSchema.entityKey,
     },
     handler: async (request, reply) => {
       return props.crudService.remove(request.params as K);
@@ -130,12 +128,7 @@ export function makeRemoveRoute<E, C_E, U_E, L_E, K extends object, OF, F>(
 export type RegisterCrudRoutesProps<E, C_E, U_E, L_E, K extends object, OF, F> = {
   fastifyInstance: FastifyInstance;
   crudService: TPCore.crud.CrudService<E, C_E, U_E, L_E, K, OF, F>;
-  entitySchema: object;
-  createEntitySchema: object;
-  updateEntitySchema: object;
-  entityCrudFindAllQuerySchema: object;
-  entityCrudFindAllResultSchema: object;
-  entityCrudFindOneParamsSchema: object;
+  crudSchema: TPCore.crud.CrudSchema;
 };
 
 export function registerCrudRoutes<E, C_E, U_E, L_E, K extends object, OF, F>(
@@ -144,51 +137,41 @@ export function registerCrudRoutes<E, C_E, U_E, L_E, K extends object, OF, F>(
   const {
     fastifyInstance,
     crudService,
-    entitySchema,
-    createEntitySchema,
-    updateEntitySchema,
-    entityCrudFindAllQuerySchema,
-    entityCrudFindAllResultSchema,
-    entityCrudFindOneParamsSchema,
+    crudSchema,
   } = props;
 
   fastifyInstance.route(
     makeFindOneRoute({
       crudService,
-      entityCrudFindOneParamsSchema,
-      entitySchema,
+      crudSchema,
     }),
   );
 
   fastifyInstance.route(
     makeFindAllRoute({
       crudService,
-      entityCrudFindAllQuerySchema,
-      entityCrudFindAllResultSchema,
+      crudSchema,
     }),
   );
 
   fastifyInstance.route(
     makeCreateRoute({
       crudService,
-      createEntitySchema,
-      entitySchema,
+      crudSchema,
     }),
   );
 
   fastifyInstance.route(
     makeUpdateRoute({
       crudService,
-      entityCrudFindOneParamsSchema,
-      updateEntitySchema,
-      entitySchema,
+      crudSchema,
     }),
   );
 
   fastifyInstance.route(
     makeRemoveRoute({
       crudService,
-      entityCrudFindOneParamsSchema,
+      crudSchema,
     }),
   );
 }

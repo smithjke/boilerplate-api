@@ -16,15 +16,11 @@ export const mapImprovedAxiosRequestConfig = (config: ImprovedAxiosRequestConfig
     ...axiosRequestConfig
   } = config;
 
-  const urlArray = [params ? fillUrl(url, params) : url];
-
-  if (query) {
-    urlArray.push(makeQueryString(query));
-  }
-
   return {
     ...axiosRequestConfig,
-    url: urlArray.join('?'),
+    url: params ? fillUrl(url, params) : url,
+    params: query,
+    paramsSerializer: (p: object) => makeQueryString(p),
   };
 };
 
