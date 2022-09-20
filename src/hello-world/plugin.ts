@@ -1,5 +1,5 @@
 import { FastifyInstance } from 'fastify';
-import TPServer from '~/2p-server';
+import { registerCrudRoutes } from '~/2p-server/api';
 import { HelloWorld } from '~/api';
 import { useHelloWorldService } from './di';
 
@@ -7,7 +7,7 @@ export function plugin(fastifyInstance: FastifyInstance, opts: any, done: () => 
   const crudService = useHelloWorldService();
   const { crudSchema } = HelloWorld;
 
-  TPServer.api.registerCrudRoutes({
+  registerCrudRoutes({
     fastifyInstance,
     crudService,
     crudSchema,

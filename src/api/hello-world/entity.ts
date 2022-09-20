@@ -1,5 +1,5 @@
 import { Static, Type } from '@sinclair/typebox';
-import TPCore from '~/2p-core';
+import { CrudSchema, CrudType } from '~/2p-core/crud';
 
 export const entity = Type.Object({
   id: Type.String(),
@@ -57,7 +57,7 @@ export type ListedEntity = Static<typeof listedEntity>;
 export type EntityKey = Static<typeof entityKey>;
 export type EntityFilter = Static<typeof entityFilter>;
 
-export const crudSchema: TPCore.crud.CrudSchema = {
+export const crudSchema: CrudSchema = {
   entity,
   createEntity,
   updateEntity,
@@ -67,7 +67,7 @@ export const crudSchema: TPCore.crud.CrudSchema = {
   entityOrderField,
 };
 
-export type EntityCrudType = TPCore.crud.CrudType<
+export type EntityCrudType = CrudType<
   Entity,
   CreateEntity,
   UpdateEntity,

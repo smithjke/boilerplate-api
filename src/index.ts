@@ -12,14 +12,7 @@ const fastify: FastifyInstance = Fastify({
 
 fastify.register(apiPlugin, { prefix: '/api' });
 
-// const mongoService = useMongoService();
-// const userService = useUserService();
-
 async function start(): Promise<void> {
-  // await mongoService.connect();
-  // await userService.init();
-  // app.listen(config.PORT, () => console.log(`Listen on port ${config.PORT}`));
-
   await fastify.listen({ port: Number(config.PORT) });
 
   const address = fastify.server.address();
