@@ -1,13 +1,18 @@
 import { TypeCompiler } from '@sinclair/typebox/compiler';
-import TPCore from '~/2p-core';
-import * as Entity from './entity';
+import { ApiConfig, AxiosService } from '~/2p-core/api';
+import {
+  Login,
+  Refresh,
+  result,
+  Result,
+} from './entity';
 
 export interface EntityService {
-  login(data: Entity.Login): Promise<Entity.Result>;
-  refresh(data: Entity.Refresh): Promise<Entity.Result>;
+  login(data: Login): Promise<Result>;
+  refresh(data: Refresh): Promise<Result>;
 }
 
-export const entityConfig: TPCore.api.ApiConfig<EntityService> = {
+export const entityConfig: ApiConfig<EntityService> = {
   login: {
     method: 'POST',
     url: '/login',
@@ -18,17 +23,17 @@ export const entityConfig: TPCore.api.ApiConfig<EntityService> = {
   },
 };
 
-export class EntityAxiosService extends TPCore.api.AxiosService implements EntityService {
-  private validateResult = TypeCompiler.Compile(Entity.result);
+export class EntityAxiosService extends AxiosService implements EntityService {
+  private validateResult = TypeCompiler.Compile(result);
 
-  async login(data: Entity.Login): Promise<Entity.Result> {
+  async login(data: Login): Promise<Result> {
     return this.request({
       ...entityConfig.login,
       data,
     }, this.validateResult);
   }
 
-  refresh(data: Entity.Refresh): Promise<Entity.Result> {
+  refresh(data: Refresh): Promise<Result> {
     return this.request({
       ...entityConfig.refresh,
       data,

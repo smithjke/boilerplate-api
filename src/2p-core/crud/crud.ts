@@ -13,15 +13,37 @@ export type CrudSchema = {
   entityOrderField: TSchema;
 };
 
-export interface CrudService<E, C_E, U_E, L_E, K extends object, OF, F> {
-  create: (data: C_E) => Promise<E>;
-  update: (data: U_E, params: K) => Promise<E>;
-  remove: (params: K) => Promise<void>;
-  findOne: (params: K) => Promise<E>;
-  findAll: (query: CrudListQuery<OF, F>) => Promise<CrudListResult<L_E>>;
+export type CrudType<
+  E extends object,
+  C_E extends object,
+  U_E extends object,
+  L_E extends object,
+  K extends object,
+  F extends object,
+  OF extends string,
+  > = {
+  entity: E;
+  createEntity: C_E;
+  updateEntity: U_E;
+  listedEntity: L_E;
+  entityKey: K;
+  entityFilter: F;
+  entityOrderField: OF;
+};
+
+export type BaseCrudType = CrudType<object, object, object, object, object, object, string>;
+
+export type AnyCrudType = CrudType<any, any, any, any, any, any, any>;
+
+export interface CrudService<T extends BaseCrudType> {
+  create: (data: T['createEntity']) => Promise<T['entity']>;
+  update: (data: T['updateEntity'], params: T['entityKey']) => Promise<T['entity']>;
+  remove: (params: T['entityKey']) => Promise<void>;
+  findOne: (params: T['entityKey']) => Promise<T['entity']>;
+  findAll: (query: CrudListQuery<T['entityOrderField'], T['entityFilter']>) => Promise<CrudListResult<T['listedEntity']>>;
 }
 
-export interface AnyCrudService extends CrudService<any, any, any, any, any, any, any> {}
+export interface AnyCrudService extends CrudService<BaseCrudType> {}
 
 export const crudApiConfig: ApiConfig<AnyCrudService> = {
   create: {
@@ -46,10 +68,7 @@ export const crudApiConfig: ApiConfig<AnyCrudService> = {
   },
 };
 
-export abstract class CrudAxiosService<E, C_E, U_E, L_E, K extends object, OF, F>
-  extends AxiosService
-  implements CrudService<E, C_E, U_E, L_E, K, OF, F> {
-
+export abstract class CrudAxiosService<T extends BaseCrudType> extends AxiosService implements CrudService<T> {
   private _validateEntity?: TypeCheck<any>;
 
   private _validateFindAllResult?: TypeCheck<any>;
@@ -74,41 +93,41 @@ export abstract class CrudAxiosService<E, C_E, U_E, L_E, K extends object, OF, F
     return this._validateFindAllResult;
   }
 
-  async create(data: C_E): Promise<E> {
-    return this.request<E>({
+  async create(data: T['createEntity']): Promise<T['entity']> {
+    return this.request<T['entity']>({
       ...crudApiConfig.create,
       data,
     }, this.validateEntity);
   }
 
-  async update(data: U_E, params: K): Promise<E> {
-    return this.request<E>({
+  async update(data: T['updateEntity'], params: T['entityKey']): Promise<T['entity']> {
+    return this.request<T['entity']>({
       ...crudApiConfig.update,
       params,
       data,
     }, this.validateEntity);
   }
 
-  async remove(params: K): Promise<void> {
+  async remove(params: T['entityKey']): Promise<void> {
     return this.request<void>({
       ...crudApiConfig.remove,
       params,
     });
   }
 
-  async findOne(params: K): Promise<E> {
-    return this.request<E>({
+  async findOne(params: T['entityKey']): Promise<T['entity']> {
+    return this.request<T['entity']>({
       ...crudApiConfig.findOne,
       params,
     }, this.validateEntity);
   }
 
-  async findAll(query: CrudListQuery<OF, F>): Promise<CrudListResult<L_E>> {
-    return this.request<CrudListResult<L_E>>({
+  async findAll(query: CrudListQuery<T['entityOrderField'], T['entityFilter']>): Promise<CrudListResult<T['listedEntity']>> {
+    return this.request<CrudListResult<T['listedEntity']>>({
       ...crudApiConfig.findAll,
       query,
     }, this.validateFindAllResult);
   }
 }
 
-export abstract class AnyCrudAxiosService extends CrudAxiosService<any, any, any, any, any, any, any> {}
+export abstract class AnyCrudAxiosService extends CrudAxiosService<AnyCrudType> {}

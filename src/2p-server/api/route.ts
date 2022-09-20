@@ -1,14 +1,12 @@
 import { FastifyInstance, RouteOptions } from 'fastify';
 import TPCore from '~/2p-core';
 
-export type FindOneRouteProps<E, C_E, U_E, L_E, K extends object, OF, F> = {
-  crudService: TPCore.crud.CrudService<E, C_E, U_E, L_E, K, OF, F>;
+export type FindOneRouteProps<T extends TPCore.crud.AnyCrudType> = {
+  crudService: TPCore.crud.CrudService<T>;
   crudSchema: TPCore.crud.CrudSchema;
 };
 
-export function makeFindOneRoute<E, C_E, U_E, L_E, K extends object, OF, F>(
-  props: FindOneRouteProps<E, C_E, U_E, L_E, K, OF, F>,
-): RouteOptions {
+export function makeFindOneRoute<T extends TPCore.crud.AnyCrudType>(props: FindOneRouteProps<T>): RouteOptions {
   return {
     method: TPCore.crud.crudApiConfig.findOne.method as any,
     url: TPCore.crud.crudApiConfig.findOne.url,
@@ -20,7 +18,7 @@ export function makeFindOneRoute<E, C_E, U_E, L_E, K extends object, OF, F>(
     },
     handler: async (request, reply) => {
       try {
-        return props.crudService.findOne(request.params as K);
+        return props.crudService.findOne(request.params as object);
       } catch (e) {
         reply.code(404);
         throw e;
@@ -29,14 +27,12 @@ export function makeFindOneRoute<E, C_E, U_E, L_E, K extends object, OF, F>(
   };
 }
 
-export type FindAllRouteProps<E, C_E, U_E, L_E, K extends object, OF, F> = {
-  crudService: TPCore.crud.CrudService<E, C_E, U_E, L_E, K, OF, F>;
+export type FindAllRouteProps<T extends TPCore.crud.AnyCrudType> = {
+  crudService: TPCore.crud.CrudService<T>;
   crudSchema: TPCore.crud.CrudSchema;
 };
 
-export function makeFindAllRoute<E, C_E, U_E, L_E, K extends object, OF, F>(
-  props: FindAllRouteProps<E, C_E, U_E, L_E, K, OF, F>
-): RouteOptions {
+export function makeFindAllRoute<T extends TPCore.crud.AnyCrudType>(props: FindAllRouteProps<T>): RouteOptions {
   return {
     method: TPCore.crud.crudApiConfig.findAll.method as any,
     url: TPCore.crud.crudApiConfig.findAll.url,
@@ -50,19 +46,17 @@ export function makeFindAllRoute<E, C_E, U_E, L_E, K extends object, OF, F>(
       },
     },
     handler: async (request, reply) => {
-      return props.crudService.findAll(request.query as TPCore.crud.CrudListQuery<OF, F>);
+      return props.crudService.findAll(request.query as TPCore.crud.CrudListQuery);
     },
   };
 }
 
-export type CreateRouteProps<E, C_E, U_E, L_E, K extends object, OF, F> = {
-  crudService: TPCore.crud.CrudService<E, C_E, U_E, L_E, K, OF, F>;
+export type CreateRouteProps<T extends TPCore.crud.AnyCrudType> = {
+  crudService: TPCore.crud.CrudService<T>;
   crudSchema: TPCore.crud.CrudSchema;
 };
 
-export function makeCreateRoute<E, C_E, U_E, L_E, K extends object, OF, F>(
-  props: CreateRouteProps<E, C_E, U_E, L_E, K, OF, F>
-): RouteOptions {
+export function makeCreateRoute<T extends TPCore.crud.AnyCrudType>(props: CreateRouteProps<T>): RouteOptions {
   return {
     method: TPCore.crud.crudApiConfig.create.method as any,
     url: TPCore.crud.crudApiConfig.create.url,
@@ -73,19 +67,17 @@ export function makeCreateRoute<E, C_E, U_E, L_E, K extends object, OF, F>(
       },
     },
     handler: async (request, reply) => {
-      return props.crudService.create(request.body as C_E);
+      return props.crudService.create(request.body as object);
     },
   };
 }
 
-export type UpdateRouteProps<E, C_E, U_E, L_E, K extends object, OF, F> = {
-  crudService: TPCore.crud.CrudService<E, C_E, U_E, L_E, K, OF, F>;
+export type UpdateRouteProps<T extends TPCore.crud.AnyCrudType> = {
+  crudService: TPCore.crud.CrudService<T>;
   crudSchema: TPCore.crud.CrudSchema;
 };
 
-export function makeUpdateRoute<E, C_E, U_E, L_E, K extends object, OF, F>(
-  props: UpdateRouteProps<E, C_E, U_E, L_E, K, OF, F>
-): RouteOptions {
+export function makeUpdateRoute<T extends TPCore.crud.AnyCrudType>(props: UpdateRouteProps<T>): RouteOptions {
   return {
     method: TPCore.crud.crudApiConfig.update.method as any,
     url: TPCore.crud.crudApiConfig.update.url,
@@ -98,21 +90,19 @@ export function makeUpdateRoute<E, C_E, U_E, L_E, K extends object, OF, F>(
     },
     handler: async (request, reply) => {
       return props.crudService.update(
-        request.body as U_E,
-        request.params as K,
+        request.body as object,
+        request.params as object,
       );
     },
   };
 }
 
-export type RemoveRouteProps<E, C_E, U_E, L_E, K extends object, OF, F> = {
-  crudService: TPCore.crud.CrudService<E, C_E, U_E, L_E, K, OF, F>;
+export type RemoveRouteProps<T extends TPCore.crud.AnyCrudType> = {
+  crudService: TPCore.crud.CrudService<T>;
   crudSchema: TPCore.crud.CrudSchema;
 };
 
-export function makeRemoveRoute<E, C_E, U_E, L_E, K extends object, OF, F>(
-  props: RemoveRouteProps<E, C_E, U_E, L_E, K, OF, F>
-): RouteOptions {
+export function makeRemoveRoute<T extends TPCore.crud.AnyCrudType>(props: RemoveRouteProps<T>): RouteOptions {
   return {
     method: TPCore.crud.crudApiConfig.remove.method as any,
     url: TPCore.crud.crudApiConfig.remove.url,
@@ -120,20 +110,18 @@ export function makeRemoveRoute<E, C_E, U_E, L_E, K extends object, OF, F>(
       params: props.crudSchema.entityKey,
     },
     handler: async (request, reply) => {
-      return props.crudService.remove(request.params as K);
+      return props.crudService.remove(request.params as object);
     },
   };
 }
 
-export type RegisterCrudRoutesProps<E, C_E, U_E, L_E, K extends object, OF, F> = {
+export type RegisterCrudRoutesProps<T extends TPCore.crud.AnyCrudType> = {
   fastifyInstance: FastifyInstance;
-  crudService: TPCore.crud.CrudService<E, C_E, U_E, L_E, K, OF, F>;
+  crudService: TPCore.crud.CrudService<T>;
   crudSchema: TPCore.crud.CrudSchema;
 };
 
-export function registerCrudRoutes<E, C_E, U_E, L_E, K extends object, OF, F>(
-  props: RegisterCrudRoutesProps<E, C_E, U_E, L_E, K, OF, F>,
-) {
+export function registerCrudRoutes<T extends TPCore.crud.AnyCrudType>(props: RegisterCrudRoutesProps<T>) {
   const {
     fastifyInstance,
     crudService,

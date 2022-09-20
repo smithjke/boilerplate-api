@@ -66,3 +66,13 @@ export const crudSchema: TPCore.crud.CrudSchema = {
   entityFilter,
   entityOrderField,
 };
+
+export type EntityCrudType = TPCore.crud.CrudType<
+  Entity,
+  CreateEntity,
+  UpdateEntity,
+  ListedEntity,
+  EntityKey,
+  EntityFilter,
+  EntityOrderField
+  >;

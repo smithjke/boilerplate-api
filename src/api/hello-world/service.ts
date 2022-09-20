@@ -1,30 +1,21 @@
-import TPCore from '~/2p-core';
-import * as Entity from './entity';
+import { ApiConfig } from '~/2p-core/api';
+import { CrudAxiosService, CrudService } from '~/2p-core/crud';
+import {
+  CreateEntity,
+  Entity,
+  EntityCrudType,
+  EntityKey,
+  UpdateEntity,
+  entity,
+  listedEntity,
+} from './entity';
 
-export type EntityCrudService = TPCore.crud.CrudService<
-  Entity.Entity,
-  Entity.CreateEntity,
-  Entity.UpdateEntity,
-  Entity.ListedEntity,
-  Entity.EntityKey,
-  Entity.EntityOrderField,
-  Entity.EntityFilter>;
-
-export abstract class EntityCrudAxiosService extends TPCore.crud.CrudAxiosService<
-  Entity.Entity,
-  Entity.CreateEntity,
-  Entity.UpdateEntity,
-  Entity.ListedEntity,
-  Entity.EntityKey,
-  Entity.EntityOrderField,
-  Entity.EntityFilter> {}
-
-export interface EntityService extends EntityCrudService {
-  doBarrelRoll: (data: Entity.UpdateEntity, params: Entity.EntityKey) => Promise<Entity.Entity>;
-  superCreate: (data: Entity.CreateEntity) => Promise<Entity.Entity>;
+export interface EntityService extends CrudService<EntityCrudType> {
+  doBarrelRoll: (data: UpdateEntity, params: EntityKey) => Promise<Entity>;
+  superCreate: (data: CreateEntity) => Promise<Entity>;
 }
 
-export const entityApiConfig: TPCore.api.ApiConfig<EntityService, EntityCrudService> = {
+export const entityApiConfig: ApiConfig<EntityService, CrudService<EntityCrudType>> = {
   doBarrelRoll: {
     method: 'PUT',
     url: '/:id/do-barrel-roll',
@@ -35,12 +26,12 @@ export const entityApiConfig: TPCore.api.ApiConfig<EntityService, EntityCrudServ
   },
 };
 
-export class EntityAxiosService extends EntityCrudAxiosService implements EntityService {
-  protected entity = Entity.entity;
+export class EntityAxiosService extends CrudAxiosService<EntityCrudType> implements EntityService {
+  protected entity = entity;
 
-  protected listedEntity = Entity.listedEntity;
+  protected listedEntity = listedEntity;
 
-  async doBarrelRoll(data: Entity.UpdateEntity, params: Entity.EntityKey): Promise<Entity.Entity> {
+  async doBarrelRoll(data: UpdateEntity, params: EntityKey): Promise<Entity> {
     return this.request({
       ...entityApiConfig.doBarrelRoll,
       params,
@@ -48,7 +39,7 @@ export class EntityAxiosService extends EntityCrudAxiosService implements Entity
     }, this.validateEntity);
   }
 
-  async superCreate(data: Entity.CreateEntity): Promise<Entity.Entity> {
+  async superCreate(data: CreateEntity): Promise<Entity> {
     return this.request({
       ...entityApiConfig.superCreate,
       data,
