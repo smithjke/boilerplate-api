@@ -1,3 +1,5 @@
+import { TSchema, Type } from '@sinclair/typebox';
+
 export type CrudListQuery<ORDER_FIELD = string, FILTER = object> = {
   limit?: number;
   offset?: number;
@@ -8,30 +10,21 @@ export type CrudListQuery<ORDER_FIELD = string, FILTER = object> = {
   filter?: FILTER;
 };
 
-export function makeCrudListQuerySchema(orderFieldSchema: object, filterSchema: object): object {
-  return {
-    type: 'object',
-    properties: {
-      limit: {
-        type: 'number',
-      },
-      offset: {
-        type: 'number',
-      },
-      order: {
-        type: 'object',
-        required: ['field', 'direction'],
-        properties: {
-          field: orderFieldSchema,
-          direction: {
-            type: 'string',
-            enum: ['asc', 'desc'],
-          },
-        },
-      },
-      filter: filterSchema,
-    },
-  };
+export function makeCrudListQuerySchema<OF extends TSchema, F extends TSchema>(field: OF, filter: F) {
+  return Type.Partial(
+    Type.Object({
+      limit: Type.Number({ minimum: 0 }),
+      offset: Type.Number({ minimum: 0 }),
+      order: Type.Object({
+        field,
+        direction: Type.Union([
+          Type.Literal('asc'),
+          Type.Literal('desc'),
+        ])
+      }),
+      filter,
+    }),
+  );
 }
 
 export type CrudListResult<T> = {
@@ -39,17 +32,9 @@ export type CrudListResult<T> = {
   total: number;
 };
 
-export function makeCrudListResultSchema(itemSchema: object): object {
-  return {
-    type: 'object',
-    properties: {
-      list: {
-        type: 'array',
-        items: itemSchema,
-      },
-      total: {
-        type: 'number',
-      },
-    },
-  };
+export function makeCrudListResultSchema<I extends TSchema>(item: I) {
+  return Type.Object({
+    list: Type.Array(item),
+    total: Type.Number({ minimum: 0 }),
+  });
 }

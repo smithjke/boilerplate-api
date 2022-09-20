@@ -1,30 +1,31 @@
 import { HelloWorld } from '~/api';
+import { CrudListQuery, CrudListResult } from '~/2p-core/crud';
 
 const currentDate = Date.now();
 
-export class Service implements HelloWorld.Service {
+export class Service implements HelloWorld.EntityService {
   private items: Array<HelloWorld.Entity> = [
     {
       id: '10',
       title: 'Lol',
       amount: 5,
-      createdAt: currentDate - 1000,
-      updatedAt: currentDate - 1000,
+      createdAt: currentDate - 10000,
+      updatedAt: currentDate - 10000,
     },
     {
       id: '11',
       title: 'Kek',
       amount: 3,
-      createdAt: currentDate,
-      updatedAt: currentDate,
+      createdAt: currentDate - 1000,
+      updatedAt: currentDate - 1000,
     },
   ];
 
-  async create(request: { data: HelloWorld.CreateEntity }): Promise<HelloWorld.Entity> {
+  async create(data: HelloWorld.CreateEntity): Promise<HelloWorld.Entity> {
     const date = Date.now();
     const item = {
       id: String(Math.round(Math.random() * 1000)),
-      ...request.data,
+      ...data,
       createdAt: date,
       updatedAt: date,
     };
@@ -32,12 +33,12 @@ export class Service implements HelloWorld.Service {
     return item;
   }
 
-  async update(request: { params: Parameters<HelloWorld.Service['findOne']>[0]['params'], data: HelloWorld.UpdateEntity }): Promise<HelloWorld.Entity> {
+  async update(data: HelloWorld.UpdateEntity, params: HelloWorld.EntityKey): Promise<HelloWorld.Entity> {
     for (let i = 0; i < this.items.length; i++) {
-      if (this.items[i].id === request.params.id) {
+      if (this.items[i].id === params.id) {
         this.items[i] = {
           ...this.items[i],
-          ...request.data,
+          ...data,
           updatedAt: Date.now(),
         };
         return this.items[i];
@@ -46,9 +47,9 @@ export class Service implements HelloWorld.Service {
     throw new Error('No item');
   }
 
-  async remove(request: { params: Parameters<HelloWorld.Service['findOne']>[0]['params'] }): Promise<void> {
+  async remove(params: HelloWorld.EntityKey): Promise<void> {
     for (let i = 0; i < this.items.length; i++) {
-      if (this.items[i].id === request.params.id) {
+      if (this.items[i].id === params.id) {
         this.items.splice(i, 1);
         return;
       }
@@ -56,21 +57,22 @@ export class Service implements HelloWorld.Service {
     throw new Error('No item');
   }
 
-  async findOne(request: { params: Parameters<HelloWorld.Service['findOne']>[0]['params'] }): Promise<Awaited<ReturnType<HelloWorld.Service['findOne']>>> {
-    const item = await this.items.find((item) => item.id === request.params.id);
+  async findOne(params: HelloWorld.EntityKey): Promise<HelloWorld.Entity> {
+    const item = await this.items.find((item) => item.id === params.id);
     if (item) {
       return item;
     }
     throw new Error('No item');
   }
 
-  async findAll(request: { query: Parameters<HelloWorld.Service['findAll']>[0]['query'] }): Promise<Awaited<ReturnType<HelloWorld.Service['findAll']>>> {
+  async findAll(query: CrudListQuery<HelloWorld.EntityOrderField, HelloWorld.EntityFilter>):
+    Promise<CrudListResult<HelloWorld.ListedEntity>> {
     const {
       limit = 10,
       offset = 0,
       order = { field: 'id', direction: 'asc' },
       filter,
-    } = request.query;
+    } = query;
     const list = this.items
       .filter((item) => {
         console.log('filter >>>', filter);
@@ -101,10 +103,12 @@ export class Service implements HelloWorld.Service {
     };
   }
 
-  async doBarrelRoll(request: HelloWorld.DoBarrelRollRequest): Promise<HelloWorld.DoBarrelRollResponse> {
-    console.log('doBarrelRoll.request >>>', request);
-    return {
-      data: `Do Barrel Roll: ${request.params.id}`,
-    };
+  async doBarrelRoll(data: HelloWorld.UpdateEntity, params: HelloWorld.EntityKey): Promise<HelloWorld.Entity> {
+    console.log('doBarrelRoll.request >>>', data, params);
+    return this.items[0];
+  }
+
+  async superCreate(data: HelloWorld.CreateEntity): Promise<HelloWorld.Entity> {
+    return this.create(data);
   }
 }

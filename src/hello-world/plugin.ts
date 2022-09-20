@@ -1,4 +1,5 @@
 import { FastifyInstance } from 'fastify';
+import TPCore from '~/2p-core';
 import TPServer from '~/2p-server';
 import { HelloWorld } from '~/api';
 import { useHelloWorldService } from './di';
@@ -12,25 +13,26 @@ export function plugin(fastifyInstance: FastifyInstance, opts: any, done: () => 
     entitySchema: HelloWorld.entity,
     createEntitySchema: HelloWorld.createEntity,
     updateEntitySchema: HelloWorld.updateEntity,
-    entityCrudFindAllQuerySchema: HelloWorld.crud.properties.findAll.parameters[0].properties.query,
-    entityCrudFindAllResultSchema: HelloWorld.crud.properties.findAll.returns.item,
-    entityCrudFindOneParamsSchema: HelloWorld.crud.properties.findOne.parameters[0].properties.params,
+    entityCrudFindAllQuerySchema: TPCore.crud.makeCrudListQuerySchema(HelloWorld.entityOrderField, HelloWorld.entityFilter),
+    entityCrudFindAllResultSchema: TPCore.crud.makeCrudListResultSchema(HelloWorld.listedEntity),
+    entityCrudFindOneParamsSchema: HelloWorld.entityKey,
   });
 
   fastifyInstance.route({
-    ...HelloWorld.requestConfig.doBarrelRoll,
+    method: HelloWorld.entityApiConfig.doBarrelRoll.method as any,
+    url: HelloWorld.entityApiConfig.doBarrelRoll.url,
     schema: {
-      params: HelloWorld.doBarrelRollRequest.properties.params,
-      body: HelloWorld.doBarrelRollRequest.properties.data,
+      params: HelloWorld.entityKey,
+      body: HelloWorld.updateEntity,
       response: {
-        200: HelloWorld.doBarrelRollResponse,
+        200: HelloWorld.entity,
       },
     },
     handler: async (request, reply) => {
-      return crudService.doBarrelRoll({
-        params: request.params as HelloWorld.DoBarrelRollRequest['params'],
-        data: request.body as HelloWorld.DoBarrelRollRequest['data'],
-      });
+      return crudService.doBarrelRoll(
+        request.body as HelloWorld.UpdateEntity,
+        request.params as HelloWorld.EntityKey,
+      );
     },
   });
 
