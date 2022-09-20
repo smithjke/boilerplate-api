@@ -43,7 +43,9 @@ export interface CrudService<T extends BaseCrudType> {
   findAll: (query: CrudListQuery<T['entityOrderField'], T['entityFilter']>) => Promise<CrudListResult<T['listedEntity']>>;
 }
 
-export interface AnyCrudService extends CrudService<BaseCrudType> {}
+export type BaseCrudService = CrudService<BaseCrudType>;
+
+export type AnyCrudService = CrudService<AnyCrudType>;
 
 export const crudApiConfig: ApiConfig<AnyCrudService> = {
   create: {
