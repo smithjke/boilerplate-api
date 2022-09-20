@@ -22,14 +22,14 @@ export class EntityAxiosService extends TPCore.api.AxiosService implements Entit
   private validateResult = TypeCompiler.Compile(Entity.result);
 
   async login(data: Entity.Login): Promise<Entity.Result> {
-    return this.request<Entity.Result>({
+    return this.request({
       ...entityConfig.login,
       data,
     }, this.validateResult);
   }
 
   refresh(data: Entity.Refresh): Promise<Entity.Result> {
-    return this.request<Entity.Result>({
+    return this.request({
       ...entityConfig.refresh,
       data,
     }, this.validateResult);

@@ -41,7 +41,7 @@ export class EntityAxiosService extends EntityCrudAxiosService implements Entity
   protected listedEntity = Entity.listedEntity;
 
   async doBarrelRoll(data: Entity.UpdateEntity, params: Entity.EntityKey): Promise<Entity.Entity> {
-    return this.request<Entity.Entity>({
+    return this.request({
       ...entityApiConfig.doBarrelRoll,
       params,
       data,
@@ -49,7 +49,7 @@ export class EntityAxiosService extends EntityCrudAxiosService implements Entity
   }
 
   async superCreate(data: Entity.CreateEntity): Promise<Entity.Entity> {
-    return this.request<Entity.Entity>({
+    return this.request({
       ...entityApiConfig.superCreate,
       data,
     }, this.validateEntity);
