@@ -19,7 +19,7 @@ export const entityConfig: ApiConfig<EntityService> = {
   },
   refresh: {
     method: 'POST',
-    url: '/login',
+    url: '/refresh',
   },
 };
 
@@ -33,7 +33,7 @@ export class EntityAxiosService extends AxiosService implements EntityService {
     }, this.validateResult);
   }
 
-  refresh(data: Refresh): Promise<Result> {
+  async refresh(data: Refresh): Promise<Result> {
     return this.request({
       ...entityConfig.refresh,
       data,
