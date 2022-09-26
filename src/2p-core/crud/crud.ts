@@ -40,7 +40,7 @@ export interface CrudService<T extends BaseCrudType> {
   update: (data: T['updateEntity'], params: T['entityKey']) => Promise<T['entity']>;
   remove: (params: T['entityKey']) => Promise<void>;
   findOne: (params: T['entityKey']) => Promise<T['entity']>;
-  findAll: (query: CrudListQuery<T['entityOrderField'], T['entityFilter']>) => Promise<CrudListResult<T['listedEntity']>>;
+  findAll: (query?: CrudListQuery<T['entityOrderField'], T['entityFilter']>) => Promise<CrudListResult<T['listedEntity']>>;
 }
 
 export type BaseCrudService = CrudService<BaseCrudType>;
@@ -124,7 +124,7 @@ export abstract class CrudAxiosService<T extends BaseCrudType> extends AxiosServ
     }, this.validateEntity);
   }
 
-  async findAll(query: CrudListQuery<T['entityOrderField'], T['entityFilter']>): Promise<CrudListResult<T['listedEntity']>> {
+  async findAll(query?: CrudListQuery<T['entityOrderField'], T['entityFilter']>): Promise<CrudListResult<T['listedEntity']>> {
     return this.request<CrudListResult<T['listedEntity']>>({
       ...crudApiConfig.findAll,
       query,

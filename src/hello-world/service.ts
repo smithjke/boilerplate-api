@@ -65,14 +65,14 @@ export class Service implements HelloWorld.EntityService {
     throw new Error('No item');
   }
 
-  async findAll(query: CrudListQuery<HelloWorld.EntityOrderField, HelloWorld.EntityFilter>):
+  async findAll(query?: CrudListQuery<HelloWorld.EntityOrderField, HelloWorld.EntityFilter>):
     Promise<CrudListResult<HelloWorld.ListedEntity>> {
     const {
       limit = 10,
       offset = 0,
       order = { field: 'id', direction: 'asc' },
       filter,
-    } = query;
+    } = query || {};
     const list = this.items
       .filter((item) => {
         console.log('filter >>>', filter);

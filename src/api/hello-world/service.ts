@@ -26,7 +26,7 @@ export const entityApiConfig: ApiConfig<EntityService, CrudService<EntityCrudTyp
   },
 };
 
-export class EntityAxiosService extends CrudAxiosService<EntityCrudType> implements EntityService {
+export class EntityCrudAxiosService extends CrudAxiosService<EntityCrudType> implements EntityService {
   protected entity = entity;
 
   protected listedEntity = listedEntity;
