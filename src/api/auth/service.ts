@@ -1,5 +1,5 @@
 import { TypeCompiler } from '@sinclair/typebox/compiler';
-import { ApiConfig, AxiosService } from '~/2p-core/api';
+import { ApiConfig, AxiosService } from '2p-core/api';
 import {
   Login,
   Refresh,

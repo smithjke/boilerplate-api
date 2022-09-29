@@ -1,4 +1,4 @@
-import { registerDependency } from '~/2p-core/di';
+import { registerDependency } from '2p-core/di';
 import HelloWorld from '~/hello-world';
 
 export function registerDependencies(): void {

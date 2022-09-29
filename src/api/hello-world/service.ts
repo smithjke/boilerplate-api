@@ -1,5 +1,5 @@
-import { ApiConfig } from '~/2p-core/api';
-import { CrudAxiosService, CrudService } from '~/2p-core/crud';
+import { ApiConfig } from '2p-core/api';
+import { CrudAxiosService, CrudService } from '2p-core/crud';
 import {
   CreateEntity,
   Entity,

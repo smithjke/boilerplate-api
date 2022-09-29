@@ -1,5 +1,5 @@
 import { HelloWorld } from '~/api';
-import { CrudListQuery, CrudListResult } from '~/2p-core/crud';
+import { CrudListQuery, CrudListResult } from '2p-core/crud';
 
 const currentDate = Date.now();
 

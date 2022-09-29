@@ -1,4 +1,4 @@
-import { createApi } from '~/2p-core/api';
+import { createApi } from '2p-core/api';
 import { EntityAxiosService as Auth } from './auth';
 import { EntityCrudAxiosService as HelloWorld } from './hello-world';
 

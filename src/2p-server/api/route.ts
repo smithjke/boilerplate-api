@@ -1,5 +1,5 @@
 import { FastifyInstance, RouteOptions } from 'fastify';
-import TPCore from '~/2p-core';
+import TPCore from '2p-core';
 
 export type FindOneRouteProps<T extends TPCore.crud.AnyCrudType> = {
   crudService: TPCore.crud.CrudService<T>;
