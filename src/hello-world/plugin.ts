@@ -1,5 +1,5 @@
 import { FastifyInstance } from 'fastify';
-import { registerCrudRoutes } from '~/2p-server/api';
+import { registerCrudRoutes } from '2p-server/api';
 import { HelloWorld } from '~/api';
 import { useHelloWorldService } from './di';
 

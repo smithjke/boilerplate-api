@@ -2,12 +2,19 @@
 # yarn lockfile v1
 
 
-"2p-core@github:smithjke/2p-core#v0.3.0":
-  version "0.3.0"
-  resolved "https://codeload.github.com/smithjke/2p-core/tar.gz/63d8c96bc475f68c3db16e3643d1f186c41f6d2c"
+"2p-core@github:smithjke/2p-core#v0.3.11":
+  version "0.3.11"
+  resolved "https://codeload.github.com/smithjke/2p-core/tar.gz/49c12895459c3c810658163e0e187a1527dfafca"
   dependencies:
     "@sinclair/typebox" "^0.24.44"
     axios "^0.27.2"
+
+"2p-server@github:smithjke/2p-server#v0.1.4":
+  version "0.1.4"
+  resolved "https://codeload.github.com/smithjke/2p-server/tar.gz/631c85fc5d958ee533683d39e0381d6e4462ddcd"
+  dependencies:
+    "2p-core" "github:smithjke/2p-core#v0.3.11"
+    fastify "^4.6.0"
 
 "@ampproject/remapping@^2.1.0":
   version "2.2.0"
@@ -1287,9 +1294,9 @@ diff@^4.0.1:
   integrity sha512-58lmxKSA4BNyLz+HHMUzlOEpg09FV+ev6ZMe3vJihgdxzgcwZ8VoEEPmALCZG9LmqfVoNMMKpttIYTVG6uDY7A==
 
 dotenv@^16.0.1:
-  version "16.0.2"
-  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-16.0.2.tgz#0b0f8652c016a3858ef795024508cddc4bffc5bf"
-  integrity sha512-JvpYKUmzQhYoIFgK2MOnF3bciIZoItIIoryihy0rIA+H4Jy0FmgyKYAHCTN98P5ybGSJcIFbh6QKeJdtZd1qhA==
+  version "16.0.3"
+  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-16.0.3.tgz#115aec42bac5053db3c456db30cc243a5a836a07"
+  integrity sha512-7GO6HghkA5fYG9TYnNxi14/7K9f5occMlp3zXAuSxn7CKCxt9xbNWG7yF8hTCSUchlfWSe3uLmlPfigevRItzQ==
 
 dynamic-dedupe@^0.3.0:
   version "0.3.0"
@@ -1425,7 +1432,7 @@ fast-uri@^2.0.0, fast-uri@^2.1.0:
   resolved "https://registry.yarnpkg.com/fast-uri/-/fast-uri-2.1.0.tgz#9279432d6b53675c90116b947ed2bbba582d6fb5"
   integrity sha512-qKRta6N7BWEFVlyonVY/V+BMLgFqktCUV0QjT259ekAIlbVrMaFnFLxJ4s/JPl4tou56S1BzPufI60bLe29fHA==
 
-fastify@^4.5.3:
+fastify@^4.5.3, fastify@^4.6.0:
   version "4.6.0"
   resolved "https://registry.yarnpkg.com/fastify/-/fastify-4.6.0.tgz#47524173eb4013a1f98fb718ba1263f67a02a39a"
   integrity sha512-EgWUvcJNvsql1R4g5/ce866BYk8SgJKjGh6AI0e9BR+NidP7hqX1ObiwHEVbkR15A9XwMtkKd3TE/tFZCjsqnA==

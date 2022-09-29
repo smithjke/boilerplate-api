@@ -31,7 +31,8 @@
     "typescript": "^4.7.2"
   },
   "dependencies": {
-    "2p-core": "github:smithjke/2p-core#v0.3.0",
+    "2p-core": "github:smithjke/2p-core#v0.3.11",
+    "2p-server": "github:smithjke/2p-server#v0.1.4",
     "@sinclair/typebox": "^0.24.41",
     "ajv": "^8.11.0",
     "axios": "^0.27.2",
