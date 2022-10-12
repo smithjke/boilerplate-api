@@ -4,21 +4,21 @@ import * as Page from '~/page';
 import * as Session from '~/session';
 import * as User from '~/user';
 
-export function privateApiPlugin(fastifyInstance: FastifyInstance, options: object, done: () => void) {
-  fastifyInstance.addHook('preHandler', (request, reply, done) => {
+export async function privateApiPlugin(fastifyInstance: FastifyInstance) {
+  const authService = Auth.useAuthService();
+
+  fastifyInstance.addHook('preHandler', async (request, reply) => {
     console.log('HEADERS >>>', request.headers);
     const token = (request.headers['authorization'] || '').replace('Bearer ', '') || null;
     console.log('token >>>', token);
-    done();
   });
+
   fastifyInstance.register(Session.plugin, { prefix: '/session' });
   fastifyInstance.register(User.plugin, { prefix: '/user' });
-  done();
 }
 
-export function apiPlugin(fastifyInstance: FastifyInstance, options: object, done: () => void) {
+export async function apiPlugin(fastifyInstance: FastifyInstance) {
   fastifyInstance.register(privateApiPlugin);
   fastifyInstance.register(Auth.plugin, { prefix: '/auth' });
   fastifyInstance.register(Page.plugin, { prefix: '/page' });
-  done();
 }

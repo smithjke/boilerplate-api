@@ -11,7 +11,7 @@ export class Service implements User.Service {
     requestMetaData?: RequestMetaData,
   ): Promise<User.SingleEntity> {
     return this.repository.create(data);
-  };
+  }
 
   async update(
     data: User.UpdateEntity,
@@ -19,26 +19,28 @@ export class Service implements User.Service {
     requestMetaData?: RequestMetaData,
   ): Promise<User.SingleEntity> {
     return this.repository.update(data, params.id);
-  };
+  }
 
   async remove(
     params: User.EntityKey,
     requestMetaData?: RequestMetaData,
   ): Promise<void> {
     await this.repository.remove(params.id);
-  };
+  }
 
   async findOne(
     params: User.EntityKey,
     requestMetaData?: RequestMetaData,
   ): Promise<User.SingleEntity> {
     return this.repository.findOne(params.id);
-  };
+  }
 
   async findAll(
     query?: CrudFindAllQuery<User.EntityOrderField, User.EntityFilter>,
     requestMetaData?: RequestMetaData,
   ): Promise<CrudFindAllResult<User.ListedEntity>> {
+    console.log('CURRENT TOKEN >>>', requestMetaData?.bearerToken);
+    console.log('CURRENT SESSION >>>', requestMetaData?.currentSession);
     return this.repository.findAll(query);
-  };
+  }
 }

@@ -19,7 +19,7 @@ export class Service implements Session.Service {
       ...entity,
       user,
     };
-  };
+  }
 
   async update(
     data: Session.UpdateEntity,
@@ -32,7 +32,7 @@ export class Service implements Session.Service {
       ...entity,
       user,
     };
-  };
+  }
 
   async remove(
     params: Session.EntityKey,
@@ -51,7 +51,7 @@ export class Service implements Session.Service {
       ...entity,
       user,
     };
-  };
+  }
 
   async findAll(
     query?: CrudFindAllQuery<Session.EntityOrderField, Session.EntityFilter>,
@@ -70,5 +70,22 @@ export class Service implements Session.Service {
       list,
       total: all.total,
     };
-  };
+  }
+
+  async getActiveSession(accessToken: string): Promise<Session.ListedEntity> {
+    const entities = await this.findAll({
+      filter: {
+        accessToken,
+      },
+    });
+    console.log('entities >>>', entities);
+    if (entities?.total !== 1) {
+      throw new Error('Find session error');
+    }
+    const entity = entities.list[0];
+    if (entity.accessTokenExpiredAt < Number(new Date())) {
+      throw new Error('No session');
+    }
+    return entity;
+  }
 }

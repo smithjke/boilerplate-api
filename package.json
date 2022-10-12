@@ -32,9 +32,9 @@
   },
   "dependencies": {
     "@sinclair/typebox": "^0.24.41",
-    "@smithjke/2p-core": "^1.0.4",
-    "@smithjke/2p-server": "^1.0.0",
-    "@smithjke/boilerplate-schema": "^0.3.3",
+    "@smithjke/2p-core": "^1.0.5",
+    "@smithjke/2p-server": "^1.0.1",
+    "@smithjke/boilerplate-schema": "^0.3.6",
     "ajv": "^8.11.0",
     "axios": "^0.27.2",
     "crypto-js": "^4.1.1",

@@ -1,8 +1,22 @@
-import Fastify, { FastifyInstance } from 'fastify';
+import Fastify, { FastifyInstance, FastifyRequest } from 'fastify';
 import qs from 'qs';
+import { RequestMetaData } from '@smithjke/2p-core/api';
+import { getRequestBearer } from '@smithjke/2p-server/api';
+import { Session } from '@smithjke/boilerplate-schema';
+import { apiPlugin } from '~/api.plugin';
 import { config } from '~/config';
 import { registerDependencies } from '~/dependencies';
-import { apiPlugin } from '~/api.plugin';
+import { useSessionService } from '~/session';
+
+declare module 'fastify' {
+  export interface FastifyRequest {
+    currentSession?: Session.ListedEntity;
+  }
+}
+
+declare module '@smithjke/2p-core/api' {
+  export interface RequestMetaData extends FastifyRequest {}
+}
 
 registerDependencies();
 
@@ -10,9 +24,18 @@ const fastify: FastifyInstance = Fastify({
   querystringParser: (str) => qs.parse(str),
 });
 
-fastify.register(apiPlugin, { prefix: '/api' });
-
 async function start(): Promise<void> {
+  const sessionService = useSessionService();
+
+  fastify.addHook('preParsing', async (request: RequestMetaData) => {
+    request.bearerToken = getRequestBearer(request);
+    if (request.bearerToken) {
+      request.currentSession = await sessionService.getActiveSession(request.bearerToken);
+    }
+  });
+
+  fastify.register(apiPlugin, { prefix: '/api' });
+
   await fastify.listen({ port: Number(config.PORT) });
 
   const address = fastify.server.address();

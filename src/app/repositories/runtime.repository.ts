@@ -64,9 +64,22 @@ export class RuntimeRepository<E extends BaseType> {
       order = { field: 'id', direction: 'asc' },
       filter,
     } = query || {};
+    const list = this.list.filter((entity) => {
+      if (filter && typeof filter === 'object') {
+        for (const key of Object.keys(filter)) {
+          // @ts-ignore
+          if (entity[key] === filter[key]) {
+            return true;
+          }
+        }
+        return false;
+      } else {
+        return true;
+      }
+    });
     return {
-      list: this.list.slice(offset, offset + limit),
-      total: this.list.length,
+      list: list.slice(offset, offset + limit),
+      total: list.length,
     };
   }
 }

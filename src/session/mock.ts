@@ -1,5 +1,5 @@
 import { Session } from '@smithjke/boilerplate-schema';
-import { RuntimeRepository } from '~/app/repositories';
+import { RuntimeRepository } from '~/app';
 
 const currentTimestamp = Number(new Date());
 

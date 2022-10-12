@@ -1,7 +1,7 @@
 import { FastifyInstance } from 'fastify';
+import { registerCrudRoutes } from '@smithjke/2p-server/crud';
 import { Page } from '@smithjke/boilerplate-schema';
 import { usePageService } from './di';
-import { registerCrudRoutes } from '@smithjke/2p-server/crud';
 
 export function plugin(fastifyInstance: FastifyInstance, opts: any, done: () => void) {
   const crudService = usePageService();

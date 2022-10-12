@@ -606,29 +606,29 @@
   dependencies:
     "@sinonjs/commons" "^1.7.0"
 
-"@smithjke/2p-core@^1.0.4":
-  version "1.0.4"
-  resolved "https://npm.pkg.github.com/download/@smithjke/2p-core/1.0.4/0b3007ec63ae8791e3561b81a378751e19f6ee0b#0b3007ec63ae8791e3561b81a378751e19f6ee0b"
-  integrity sha512-ZSiHSqnpMggI0xQRlBlhxjqZSolymYj0k5RNC7V1+E2BfPE68/0VsVLxSPQhN3il+W0HlxOBknoEdkip3DERNA==
+"@smithjke/2p-core@^1.0.5":
+  version "1.0.5"
+  resolved "https://npm.pkg.github.com/download/@smithjke/2p-core/1.0.5/65aa17a298460990d76bbae3434f3a192b093f68#65aa17a298460990d76bbae3434f3a192b093f68"
+  integrity sha512-QRKK/+/tIzBNu8hxPZfB1sOKZPP9OmbseRfpNYkjQ3RgY3vfubNm8VoqioF8W+l32steNF65ORvTuY5vVBxbhQ==
   dependencies:
     "@sinclair/typebox" "^0.24.44"
     axios "^0.27.2"
 
-"@smithjke/2p-server@^1.0.0":
-  version "1.0.0"
-  resolved "https://npm.pkg.github.com/download/@smithjke/2p-server/1.0.0/7b662fa9743ccf30cceca49bbb8075ef37e3dddd#7b662fa9743ccf30cceca49bbb8075ef37e3dddd"
-  integrity sha512-J+NtF1G3SOZ0HkxuSIkgIUdYvRH9gRacI2W4YTLxcKu+iV6zn9fIeV5rewta7FkhlJ8JB/NkUedSI6ozVRX9Ow==
+"@smithjke/2p-server@^1.0.1":
+  version "1.0.1"
+  resolved "https://npm.pkg.github.com/download/@smithjke/2p-server/1.0.1/5c240776ded57591e2662f7f4d0bffcaa79b68fa#5c240776ded57591e2662f7f4d0bffcaa79b68fa"
+  integrity sha512-lxzziR2Dw/sDKvFS+oyv/LN1KX/TB2g4BJrox+2NjBqEhn3+F3H+u2zl/wlrCDjI/dNc0bqvtj8po8iju7C7uw==
   dependencies:
-    "@smithjke/2p-core" "^1.0.4"
+    "@smithjke/2p-core" "^1.0.5"
     fastify "^4.6.0"
 
-"@smithjke/boilerplate-schema@^0.3.3":
-  version "0.3.3"
-  resolved "https://npm.pkg.github.com/download/@smithjke/boilerplate-schema/0.3.3/f366b2b162111583c4fe2cfcd963fe8eca86328b#f366b2b162111583c4fe2cfcd963fe8eca86328b"
-  integrity sha512-QeobNjKGEJJZRRkR0dmDTrg5i1bEqTIUzZo4BLXn84oNahtiwvgfmx1+LkzGpH+qSeQXl2NzqGusII1MkBMR5A==
+"@smithjke/boilerplate-schema@^0.3.6":
+  version "0.3.6"
+  resolved "https://npm.pkg.github.com/download/@smithjke/boilerplate-schema/0.3.6/74ae5e31364ecfbde4ac824acc0aa44d8923dbf9#74ae5e31364ecfbde4ac824acc0aa44d8923dbf9"
+  integrity sha512-E2di49a4Xg70Y31wml3W0+8ilXW09Th5l194dmglLawhQJK2uQ3p7Ki38rG6O0FXNTGHll7ReP/1U6hQMgGK9g==
   dependencies:
     "@sinclair/typebox" "^0.24.44"
-    "@smithjke/2p-core" "^1.0.4"
+    "@smithjke/2p-core" "^1.0.5"
 
 "@tsconfig/node10@^1.0.7":
   version "1.0.9"
