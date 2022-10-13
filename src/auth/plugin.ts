@@ -1,10 +1,8 @@
-import { FastifyInstance } from 'fastify';
+import { FastifyInstance, FastifyRequest } from 'fastify';
 import { Auth } from '@smithjke/boilerplate-schema';
 import { useAuthService } from './di';
 
-export function plugin(fastifyInstance: FastifyInstance, opts: any, done: () => void) {
-  const service = useAuthService();
-
+export async function plugin(fastifyInstance: FastifyInstance) {
   fastifyInstance.route({
     method: Auth.apiConfig.login.method as any,
     url: Auth.apiConfig.login.url,
@@ -14,9 +12,13 @@ export function plugin(fastifyInstance: FastifyInstance, opts: any, done: () => 
         200: Auth.result,
       },
     },
-    handler: (request) => service.login(
-      request.body as Auth.Login,
-    ),
+    handler: (request: FastifyRequest) => {
+      const service = useAuthService();
+      service.setRequest(request);
+      return service.login(
+        request.body as Auth.Login,
+      );
+    },
   });
 
   fastifyInstance.route({
@@ -28,10 +30,12 @@ export function plugin(fastifyInstance: FastifyInstance, opts: any, done: () => 
         200: Auth.result,
       },
     },
-    handler: (request) => service.refresh(
-      request.body as Auth.Refresh,
-    ),
+    handler: (request: FastifyRequest) => {
+      const service = useAuthService();
+      service.setRequest(request);
+      return service.refresh(
+        request.body as Auth.Refresh,
+      );
+    },
   });
-
-  done();
 }

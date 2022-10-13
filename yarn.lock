@@ -614,12 +614,20 @@
     "@sinclair/typebox" "^0.24.44"
     axios "^0.27.2"
 
-"@smithjke/2p-server@^1.0.1":
-  version "1.0.1"
-  resolved "https://npm.pkg.github.com/download/@smithjke/2p-server/1.0.1/5c240776ded57591e2662f7f4d0bffcaa79b68fa#5c240776ded57591e2662f7f4d0bffcaa79b68fa"
-  integrity sha512-lxzziR2Dw/sDKvFS+oyv/LN1KX/TB2g4BJrox+2NjBqEhn3+F3H+u2zl/wlrCDjI/dNc0bqvtj8po8iju7C7uw==
+"@smithjke/2p-core@^1.1.2":
+  version "1.1.2"
+  resolved "https://npm.pkg.github.com/download/@smithjke/2p-core/1.1.2/9bb5b899949eb3de30bd42c36d6cd8daa7fa7d57#9bb5b899949eb3de30bd42c36d6cd8daa7fa7d57"
+  integrity sha512-4Qg/8GgywLkYgAPHnXB/U4Lmxcmg6oyUtYwfMlg1mJuARxsPY6fjK9e/HUJ1KYXjfTeK38c+KRDNxWdFj3b5mA==
   dependencies:
-    "@smithjke/2p-core" "^1.0.5"
+    "@sinclair/typebox" "^0.24.44"
+    axios "^0.27.2"
+
+"@smithjke/2p-server@^1.0.2":
+  version "1.0.2"
+  resolved "https://npm.pkg.github.com/download/@smithjke/2p-server/1.0.2/d6ea4856165aaa4dcd9d5a6257877d480a861665#d6ea4856165aaa4dcd9d5a6257877d480a861665"
+  integrity sha512-tpBmO805zQRUmCguGMiWH7/ljblcvs1doUqY0ABoqi/L1OaapN5tZnzbI1aMcWnKDdsRxqp8Dou1A1m5EX420A==
+  dependencies:
+    "@smithjke/2p-core" "^1.1.2"
     fastify "^4.6.0"
 
 "@smithjke/boilerplate-schema@^0.3.6":

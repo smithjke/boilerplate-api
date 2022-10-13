@@ -5,11 +5,13 @@ import * as Session from '~/session';
 import * as User from '~/user';
 
 export function registerDependencies(): void {
-  registerDependency('AUTH_SERVICE', () => new Auth.Service());
+  // SINGLETON
   registerDependency('PAGE_REPOSITORY', Page.createRepository);
-  registerDependency('PAGE_SERVICE', () => new Page.Service());
   registerDependency('USER_REPOSITORY', User.createRepository);
-  registerDependency('USER_SERVICE', () => new User.Service());
   registerDependency('SESSION_REPOSITORY', Session.createRepository);
-  registerDependency('SESSION_SERVICE', () => new Session.Service());
+  // FACTORY
+  registerDependency('AUTH_SERVICE', () => new Auth.Service(), 'factory');
+  registerDependency('PAGE_SERVICE', () => new Page.Service(), 'factory');
+  registerDependency('USER_SERVICE', () => new User.Service(), 'factory');
+  registerDependency('SESSION_SERVICE', () => new Session.Service(), 'factory');
 }

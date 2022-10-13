@@ -1,6 +1,5 @@
 import Fastify, { FastifyInstance, FastifyRequest } from 'fastify';
 import qs from 'qs';
-import { RequestMetaData } from '@smithjke/2p-core/api';
 import { getRequestBearer } from '@smithjke/2p-server/api';
 import { Session } from '@smithjke/boilerplate-schema';
 import { apiPlugin } from '~/api.plugin';
@@ -10,12 +9,9 @@ import { useSessionService } from '~/session';
 
 declare module 'fastify' {
   export interface FastifyRequest {
+    bearerToken?: string;
     currentSession?: Session.ListedEntity;
   }
-}
-
-declare module '@smithjke/2p-core/api' {
-  export interface RequestMetaData extends FastifyRequest {}
 }
 
 registerDependencies();
@@ -27,7 +23,7 @@ const fastify: FastifyInstance = Fastify({
 async function start(): Promise<void> {
   const sessionService = useSessionService();
 
-  fastify.addHook('preParsing', async (request: RequestMetaData) => {
+  fastify.addHook('preParsing', async (request: FastifyRequest) => {
     request.bearerToken = getRequestBearer(request);
     if (request.bearerToken) {
       request.currentSession = await sessionService.getActiveSession(request.bearerToken);

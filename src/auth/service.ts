@@ -1,7 +1,8 @@
+import { FastifyService } from '@smithjke/2p-server/api';
 import { Auth } from '@smithjke/boilerplate-schema';
 import { useSessionService } from '~/session';
 
-export class Service implements Auth.Service {
+export class Service extends FastifyService implements Auth.Service {
   private sessionService = useSessionService();
 
   async login(data: Auth.Login): Promise<Auth.Result> {

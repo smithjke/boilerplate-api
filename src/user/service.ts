@@ -1,46 +1,28 @@
-import { User } from '@smithjke/boilerplate-schema';
-import { RequestMetaData } from '@smithjke/2p-core/api';
 import { CrudFindAllQuery, CrudFindAllResult } from '@smithjke/2p-core/crud';
+import { CrudFastifyService } from '@smithjke/2p-server/crud';
+import { User } from '@smithjke/boilerplate-schema';
 import { useUserRepository } from './di';
 
-export class Service implements User.Service {
+export class Service extends CrudFastifyService<User.EntityCrudType> implements User.Service {
   private repository = useUserRepository();
 
-  async create(
-    data: User.CreateEntity,
-    requestMetaData?: RequestMetaData,
-  ): Promise<User.SingleEntity> {
+  async create(data: User.CreateEntity): Promise<User.SingleEntity> {
     return this.repository.create(data);
   }
 
-  async update(
-    data: User.UpdateEntity,
-    params: User.EntityKey,
-    requestMetaData?: RequestMetaData,
-  ): Promise<User.SingleEntity> {
+  async update(data: User.UpdateEntity, params: User.EntityKey): Promise<User.SingleEntity> {
     return this.repository.update(data, params.id);
   }
 
-  async remove(
-    params: User.EntityKey,
-    requestMetaData?: RequestMetaData,
-  ): Promise<void> {
+  async remove(params: User.EntityKey): Promise<void> {
     await this.repository.remove(params.id);
   }
 
-  async findOne(
-    params: User.EntityKey,
-    requestMetaData?: RequestMetaData,
-  ): Promise<User.SingleEntity> {
+  async findOne(params: User.EntityKey): Promise<User.SingleEntity> {
     return this.repository.findOne(params.id);
   }
 
-  async findAll(
-    query?: CrudFindAllQuery<User.EntityOrderField, User.EntityFilter>,
-    requestMetaData?: RequestMetaData,
-  ): Promise<CrudFindAllResult<User.ListedEntity>> {
-    console.log('CURRENT TOKEN >>>', requestMetaData?.bearerToken);
-    console.log('CURRENT SESSION >>>', requestMetaData?.currentSession);
+  async findAll(query?: CrudFindAllQuery<User.EntityCrudType>): Promise<CrudFindAllResult<User.EntityCrudType>> {
     return this.repository.findAll(query);
   }
 }

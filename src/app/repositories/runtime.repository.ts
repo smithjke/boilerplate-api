@@ -57,7 +57,7 @@ export class RuntimeRepository<E extends BaseType> {
     throw new Error('Not found');
   }
 
-  async findAll(query?: CrudFindAllQuery<any, any>): Promise<CrudFindAllResult<E>> {
+  async findAll(query?: CrudFindAllQuery<any>): Promise<CrudFindAllResult<any>> {
     const {
       limit = 10,
       offset = 0,
