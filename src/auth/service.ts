@@ -10,25 +10,16 @@ export class Service extends FastifyService implements Auth.Service {
   }
 
   async refresh(data: Auth.Refresh): Promise<Auth.Result> {
-    const sessions = await this.sessionService.findAll({
-      filter: {
-        refreshToken: data.refreshToken,
-      },
-    });
-    if (sessions?.total) {
-      const session = sessions.list[0];
-      const accessToken = String(Math.random());
-      const refreshToken = String(Math.random());
-      await this.sessionService.update({
-        ...session,
-        accessToken,
-        refreshToken,
-      }, { id: session.id });
-      return {
-        accessToken,
-        refreshToken,
-      };
-    }
-    throw new Error('Not Found');
+    const session = await this.sessionService.findOneByRefreshToken(data.refreshToken);
+    const accessToken = String(Math.random());
+    const refreshToken = String(Math.random());
+    await this.sessionService.update({
+      accessToken,
+      refreshToken,
+    }, { id: session.id });
+    return {
+      accessToken,
+      refreshToken,
+    };
   }
 }

@@ -29,7 +29,7 @@ export class RuntimeRepository<E extends BaseType> {
   }
 
   async update(data: Partial<Omit<E, 'id' | 'createdAt' | 'updatedAt'>>, id: BaseType['id']): Promise<E> {
-    const item = await this.findOne(id);
+    const item = await this.findOne({ id });
     if (item) {
       Object.keys(data).forEach((key) => {
         // @ts-ignore
@@ -42,19 +42,34 @@ export class RuntimeRepository<E extends BaseType> {
   }
 
   async remove(id: BaseType['id']): Promise<void> {
-    const item = await this.findOne(id);
+    const item = await this.findOne({ id });
     if (!item) {
-      throw new Error('Not found');
+      throw new Error('Not Found');
     }
     this.list.splice(this.list.indexOf(item), 1);
   }
 
-  async findOne(id: BaseType['id']): Promise<E> {
-    const item = this.list.find((item) => item.id === id);
+  async findOne(filter: any): Promise<E> {
+    if (typeof filter !== 'object') {
+      throw new Error('No Filter');
+    }
+    const keys = Object.keys(filter);
+    if (!keys.length) {
+      throw new Error('No Filter Keys');
+    }
+    const item = this.list.find((item) => {
+      for (const key of keys) {
+        // @ts-ignore
+        if (item[key] !== filter[key]) {
+          return false;
+        }
+      }
+      return true;
+    });
     if (item) {
       return item;
     }
-    throw new Error('Not found');
+    throw new Error('Not Found');
   }
 
   async findAll(query?: CrudFindAllQuery<any>): Promise<CrudFindAllResult<any>> {

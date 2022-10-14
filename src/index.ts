@@ -26,7 +26,7 @@ async function start(): Promise<void> {
   fastify.addHook('preParsing', async (request: FastifyRequest) => {
     request.bearerToken = getRequestBearer(request);
     if (request.bearerToken) {
-      request.currentSession = await sessionService.getActiveSession(request.bearerToken);
+      request.currentSession = await sessionService.findActiveSession(request.bearerToken);
     }
   });
 

@@ -622,6 +622,14 @@
     "@sinclair/typebox" "^0.24.44"
     axios "^0.27.2"
 
+"@smithjke/2p-core@^1.2.0":
+  version "1.2.0"
+  resolved "https://npm.pkg.github.com/download/@smithjke/2p-core/1.2.0/04d27b8d440706cbbaf0271a8d4e96acce5df79f#04d27b8d440706cbbaf0271a8d4e96acce5df79f"
+  integrity sha512-SpnEz4gqB+NLWreZfYUNJqYKelBUIRJ62sIb5sd9uoSeypBfdrnqgVrugQDQ1fbFCdtq0yihcVx9l1aw1XEH2w==
+  dependencies:
+    "@sinclair/typebox" "^0.24.44"
+    axios "^0.27.2"
+
 "@smithjke/2p-server@^1.0.3":
   version "1.0.3"
   resolved "https://npm.pkg.github.com/download/@smithjke/2p-server/1.0.3/dfa3b11a68dc9b05ec5054e2206e654cb0c7d3c6#dfa3b11a68dc9b05ec5054e2206e654cb0c7d3c6"

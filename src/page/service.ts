@@ -19,7 +19,7 @@ export class Service extends CrudFastifyService<Page.EntityCrudType> implements 
   };
 
   async findOne(params: Page.EntityKey): Promise<Page.SingleEntity> {
-    return this.repository.findOne(params.id);
+    return this.repository.findOne({ id: params.id });
   };
 
   async findAll(query?: CrudFindAllQuery<Page.EntityCrudType>): Promise<CrudFindAllResult<Page.EntityCrudType>> {

@@ -1,8 +1,8 @@
-import { Session } from '@smithjke/boilerplate-schema';
 import { CrudFindAllQuery, CrudFindAllResult } from '@smithjke/2p-core/crud';
-import { useSessionRepository } from './di';
-import { useUserService } from '~/user';
 import { CrudFastifyService } from '@smithjke/2p-server/crud';
+import { Session } from '@smithjke/boilerplate-schema';
+import { useUserService } from '~/user';
+import { useSessionRepository } from './di';
 
 export class Service extends CrudFastifyService<Session.EntityCrudType> implements Session.Service {
   private repository = useSessionRepository();
@@ -32,7 +32,7 @@ export class Service extends CrudFastifyService<Session.EntityCrudType> implemen
   };
 
   async findOne(params: Session.EntityKey): Promise<Session.SingleEntity> {
-    const entity = await this.repository.findOne(params.id);
+    const entity = await this.repository.findOne({ id: params.id });
     const user = await this.userService.findOne({ id: entity.userId });
     return {
       ...entity,
@@ -56,19 +56,28 @@ export class Service extends CrudFastifyService<Session.EntityCrudType> implemen
     };
   }
 
-  async getActiveSession(accessToken: string): Promise<Session.ListedEntity> {
-    const entities = await this.findAll({
-      filter: {
-        accessToken,
-      },
-    });
-    console.log('entities >>>', entities);
-    if (entities?.total !== 1) {
-      throw new Error('Find session error');
-    }
-    const entity = entities.list[0];
+  async findOneByAccessToken(accessToken: string): Promise<Session.SingleEntity> {
+    const entity = await this.repository.findOne({ accessToken });
+    const user = await this.userService.findOne({ id: entity.userId });
+    return {
+      ...entity,
+      user,
+    };
+  }
+
+  async findOneByRefreshToken(refreshToken: string): Promise<Session.SingleEntity> {
+    const entity = await this.repository.findOne({ refreshToken });
+    const user = await this.userService.findOne({ id: entity.userId });
+    return {
+      ...entity,
+      user,
+    };
+  }
+
+  async findActiveSession(accessToken: string): Promise<Session.SingleEntity> {
+    const entity = await this.findOneByAccessToken(accessToken);
     if (entity.accessTokenExpiredAt < Number(new Date())) {
-      throw new Error('No session');
+      throw new Error('No Active Session');
     }
     return entity;
   }
