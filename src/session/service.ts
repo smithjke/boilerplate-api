@@ -1,64 +1,38 @@
-import { CrudFindAllQuery, CrudFindAllResult } from '@smithjke/2p-core/crud';
 import { CrudFastifyService } from '@smithjke/2p-server/crud';
 import { Session } from '@smithjke/boilerplate-schema';
+import { FastifyError } from '@smithjke/2p-server/api';
 import { useUserService } from '~/user';
 import { useSessionRepository } from './di';
 
 export class Service extends CrudFastifyService<Session.EntityCrudType> implements Session.Service {
-  private repository = useSessionRepository();
+  protected repository = useSessionRepository();
 
   private userService = useUserService();
 
-  async create(data: Session.CreateEntity): Promise<Session.SingleEntity> {
-    const entity = await this.repository.create(data);
-    const user = await this.userService.findOne({ id: entity.userId });
-    return {
-      ...entity,
-      user,
-    };
-  }
-
-  async update(data: Session.UpdateEntity, params: Session.EntityKey): Promise<Session.SingleEntity> {
-    const entity = await this.repository.update(data, params.id);
-    const user = await this.userService.findOne({ id: entity.userId });
-    return {
-      ...entity,
-      user,
-    };
-  }
-
-  async remove(params: Session.EntityKey): Promise<void> {
-    await this.repository.remove(params.id);
-  };
-
   async findOne(params: Session.EntityKey): Promise<Session.SingleEntity> {
-    const entity = await this.repository.findOne({ id: params.id });
+    const entity = await this.repository.findOne(params);
+
+    if (!entity) {
+      throw new FastifyError('No Entity', 404);
+    }
+
     const user = await this.userService.findOne({ id: entity.userId });
+
     return {
       ...entity,
       user,
-    };
-  }
-
-  async findAll(query?: CrudFindAllQuery<Session.EntityCrudType>): Promise<CrudFindAllResult<Session.EntityCrudType>> {
-    const all = await this.repository.findAll(query);
-    let list = [];
-    for (const entity of all.list) {
-      const user = await this.userService.findOne({ id: entity.userId });
-      list.push({
-        ...entity,
-        user,
-      });
-    }
-    return {
-      list,
-      total: all.total,
     };
   }
 
   async findOneByAccessToken(accessToken: string): Promise<Session.SingleEntity> {
     const entity = await this.repository.findOne({ accessToken });
+
+    if (!entity) {
+      throw new FastifyError('No Entity', 404);
+    }
+
     const user = await this.userService.findOne({ id: entity.userId });
+
     return {
       ...entity,
       user,
@@ -67,7 +41,13 @@ export class Service extends CrudFastifyService<Session.EntityCrudType> implemen
 
   async findOneByRefreshToken(refreshToken: string): Promise<Session.SingleEntity> {
     const entity = await this.repository.findOne({ refreshToken });
+
+    if (!entity) {
+      throw new FastifyError('No Entity', 404);
+    }
+
     const user = await this.userService.findOne({ id: entity.userId });
+
     return {
       ...entity,
       user,
@@ -76,9 +56,11 @@ export class Service extends CrudFastifyService<Session.EntityCrudType> implemen
 
   async findActiveSession(accessToken: string): Promise<Session.SingleEntity> {
     const entity = await this.findOneByAccessToken(accessToken);
+
     if (entity.accessTokenExpiredAt < Number(new Date())) {
-      throw new Error('No Active Session');
+      throw new FastifyError('No Active Session', 404);
     }
+
     return entity;
   }
 }

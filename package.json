@@ -19,6 +19,7 @@
     "url": "https://github.com/smithjke/boilerplate-api/issues"
   },
   "devDependencies": {
+    "@types/crypto-js": "^4.1.1",
     "@types/express": "^4.17.13",
     "@types/jest": "^29.0.3",
     "@types/node": "^18.7.23",
@@ -33,7 +34,7 @@
   "dependencies": {
     "@sinclair/typebox": "^0.24.41",
     "@smithjke/2p-core": "^1.2.0",
-    "@smithjke/2p-server": "^1.0.3",
+    "@smithjke/2p-server": "^1.1.0",
     "@smithjke/boilerplate-schema": "^0.3.6",
     "ajv": "^8.11.0",
     "axios": "^0.27.2",
